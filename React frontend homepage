@@ -1,0 +1,155 @@
+from zipfile import ZipFile
+import os
+
+# Directory structure for React app homepage
+base_dir = "/mnt/data/whosenxt-frontend"
+os.makedirs(f"{base_dir}/public", exist_ok=True)
+os.makedirs(f"{base_dir}/src/components", exist_ok=True)
+
+# package.json
+package_json = """
+{
+  "name": "whosenxt-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+"""
+
+# index.html
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WHOSENXT</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+"""
+
+# App.js
+app_js = """
+import React from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+
+function App() {
+  return (
+    <div className="App">
+      <Navbar />
+      <div className="main">
+        <h1>Welcome to WHOSENXT 👋</h1>
+        <p>Your digital life assistant is live.</p>
+        <div className="grid">
+          <a href="/marketplace" className="card">Marketplace</a>
+          <a href="/gigs" className="card">Gigs</a>
+          <a href="/delivery" className="card">Delivery</a>
+          <a href="/chat" className="card">Family Chat</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+"""
+
+# Navbar component
+navbar_js = """
+import React from "react";
+
+function Navbar() {
+  return (
+    <nav className="navbar">
+      <h2>WHOSENXT</h2>
+    </nav>
+  );
+}
+
+export default Navbar;
+"""
+
+# App.css
+app_css = """
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: #f3f4f6;
+}
+.App {
+  text-align: center;
+  padding: 20px;
+}
+.navbar {
+  background-color: #4b0082;
+  color: white;
+  padding: 10px 20px;
+  text-align: left;
+}
+.main h1 {
+  color: #333;
+}
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  width: 180px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #4b0082;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: 0.2s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.05);
+  background-color: #ece5f7;
+}
+"""
+
+# Write files
+with open(f"{base_dir}/package.json", "w") as f:
+    f.write(package_json.strip())
+
+with open(f"{base_dir}/public/index.html", "w") as f:
+    f.write(index_html.strip())
+
+with open(f"{base_dir}/src/App.js", "w") as f:
+    f.write(app_js.strip())
+
+with open(f"{base_dir}/src/App.css", "w") as f:
+    f.write(app_css.strip())
+
+with open(f"{base_dir}/src/components/Navbar.js", "w") as f:
+    f.write(navbar_js.strip())
+
+# Zip the React project
+zip_path = "/mnt/data/whosenxt-frontend.zip"
+with ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(base_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, base_dir)
+            zipf.write(filepath, arcname)
+
+zip_path
