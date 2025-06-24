@@ -36,8 +36,7 @@ def init_db():
 init_db()
 
 # ----- STRIPE -----
-@app.route("/create-payment-intent", methods=["POST"])
-def create_payment():
+
     try:
         data = request.get_json()
         amount = data.get("amount")
