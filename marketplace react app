@@ -1,0 +1,192 @@
+from zipfile import ZipFile
+import os
+
+# Directory structure for the Marketplace React component
+base_dir = "/mnt/data/whosenxt-marketplace"
+os.makedirs(f"{base_dir}/src/components", exist_ok=True)
+os.makedirs(f"{base_dir}/public", exist_ok=True)
+
+# index.html
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WHOSENXT Marketplace</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+"""
+
+# package.json
+package_json = """
+{
+  "name": "whosenxt-marketplace",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+"""
+
+# App.js
+app_js = """
+import React, { useState } from "react";
+import "./App.css";
+
+function App() {
+  const [formVisible, setFormVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    price: "",
+    location: "",
+    image: null,
+    images: []
+  });
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({ ...formData, image: URL.createObjectURL(files[0]) });
+    } else if (name === "images") {
+      setFormData({ ...formData, images: Array.from(files).map(file => URL.createObjectURL(file)) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Submitted! (This form will connect to your backend.)");
+  };
+
+  return (
+    <div className="App">
+      <h1>WHOSENXT Marketplace 🛒</h1>
+      <button className="post-btn" onClick={() => setFormVisible(!formVisible)}>
+        {formVisible ? "Close" : "Post New Item"}
+      </button>
+
+      {formVisible && (
+        <form onSubmit={handleSubmit} className="market-form">
+          <input name="title" type="text" placeholder="Item Name" onChange={handleChange} required />
+          <input name="price" type="number" placeholder="Price ($)" onChange={handleChange} required />
+          <input name="location" type="text" placeholder="Location" onChange={handleChange} required />
+          <label>Main Image:</label>
+          <input name="image" type="file" accept="image/*" onChange={handleChange} required />
+          {formData.image && <img src={formData.image} alt="Preview" className="preview" />}
+          <label>Verification Images (up to 3):</label>
+          <input name="images" type="file" accept="image/*" multiple onChange={handleChange} />
+          <div className="verifications">
+            {formData.images.map((src, index) => (
+              <img key={index} src={src} alt={`Verification ${index}`} className="preview" />
+            ))}
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default App;
+"""
+
+# App.css
+app_css = """
+body {
+  font-family: sans-serif;
+  background: #f4f4f9;
+  margin: 0;
+  padding: 20px;
+}
+.App {
+  max-width: 800px;
+  margin: auto;
+}
+h1 {
+  color: #4b0082;
+  text-align: center;
+}
+.post-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-weight: bold;
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.market-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.market-form input[type="text"],
+.market-form input[type="number"],
+.market-form input[type="file"] {
+  display: block;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+}
+.market-form button[type="submit"] {
+  background-color: #4b0082;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.preview {
+  width: 100px;
+  height: auto;
+  margin: 10px 10px 10px 0;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.verifications {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+"""
+
+# Write files
+with open(f"{base_dir}/public/index.html", "w") as f:
+    f.write(index_html.strip())
+
+with open(f"{base_dir}/package.json", "w") as f:
+    f.write(package_json.strip())
+
+with open(f"{base_dir}/src/App.js", "w") as f:
+    f.write(app_js.strip())
+
+with open(f"{base_dir}/src/App.css", "w") as f:
+    f.write(app_css.strip())
+
+# Zip it up
+zip_path = "/mnt/data/whosenxt-marketplace.zip"
+with ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(base_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, base_dir)
+            zipf.write(filepath, arcname)
+
+zip_path
