@@ -1,0 +1,142 @@
+# Re-run the React dashboard zip creation now that the user is ready to finish
+from zipfile import ZipFile
+import os
+
+# Setup folder paths
+base_dir = "/mnt/data/whosenxt-main"
+os.makedirs(f"{base_dir}/src/pages", exist_ok=True)
+os.makedirs(f"{base_dir}/public", exist_ok=True)
+
+# Create public/index.html
+with open(f"{base_dir}/public/index.html", "w") as f:
+    f.write("""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WHOSENXT Dashboard</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+""".strip())
+
+# Create package.json
+with open(f"{base_dir}/package.json", "w") as f:
+    f.write("""
+{
+  "name": "whosenxt-main",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+""".strip())
+
+# Create src/App.js
+with open(f"{base_dir}/src/App.js", "w") as f:
+    f.write("""
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Marketplace from "./pages/Marketplace";
+import Gigs from "./pages/Gigs";
+import Delivery from "./pages/Delivery";
+import Family from "./pages/Family";
+import "./App.css";
+
+function App() {
+  return (
+    <Router>
+      <div className="navbar">
+        <Link to="/">🏠 Home</Link>
+        <Link to="/marketplace">🛒 Marketplace</Link>
+        <Link to="/gigs">🎯 Gigs</Link>
+        <Link to="/delivery">🚚 Delivery</Link>
+        <Link to="/family">👨‍👩‍👧‍👦 Family</Link>
+      </div>
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/gigs" element={<Gigs />} />
+          <Route path="/delivery" element={<Delivery />} />
+          <Route path="/family" element={<Family />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+""".strip())
+
+# Create src/App.css
+with open(f"{base_dir}/src/App.css", "w") as f:
+    f.write("""
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #f4f4f9;
+}
+.navbar {
+  display: flex;
+  background: #4b0082;
+  padding: 10px;
+  justify-content: space-around;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.main-content {
+  padding: 20px;
+}
+""".strip())
+
+# Generate dummy page components
+pages = {
+    "Home": "<h1>Welcome to WHOSENXT 🏠</h1><p>Select a feature from above to get started.</p>",
+    "Marketplace": "<h1>WHOSENXT Marketplace 🛒</h1><p>Post and view items here.</p>",
+    "Gigs": "<h1>WHOSENXT Gigs 🎯</h1><p>Post and browse gigs here.</p>",
+    "Delivery": "<h1>WHOSENXT Delivery 🚚</h1><p>Request a delivery.</p>",
+    "Family": "<h1>WHOSENXT Family 👨‍👩‍👧‍👦</h1><p>Chat and location sharing.</p>"
+}
+
+for page, html in pages.items():
+    with open(f"{base_dir}/src/pages/{page}.js", "w") as f:
+        f.write(f"""
+import React from "react";
+
+function {page}() {{
+  return (
+    <div>
+      {html}
+    </div>
+  );
+}}
+
+export default {page};
+""".strip())
+
+# Zip everything
+zip_path = "/mnt/data/whosenxt-main.zip"
+with ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(base_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, base_dir)
+            zipf.write(filepath, arcname)
+
+zip_path
