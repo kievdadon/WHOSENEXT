@@ -6,16 +6,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# 👇 Add this homepage route right below
 @app.route("/")
 def home():
     return "<h1>Welcome to WHOSENXT 👋</h1><p>Your digital life assistant is live!</p>"
-
-# Keep all your existing routes below here
-@app.route("/create-payment-intent", methods=["POST"])
-def create_payment():
-    # Your existing code...
-    pass
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
@@ -49,7 +42,6 @@ def create_payment():
         return jsonify({"clientSecret": intent.client_secret})
     except Exception as e:
         return jsonify(error=str(e)), 400
-
 
 # ----- GIG SYSTEM -----
 @app.route("/post-gig", methods=["POST"])
