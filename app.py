@@ -120,5 +120,7 @@ def get_locations():
         return jsonify([{"user": r[0], "lat": r[1], "lon": r[2]} for r in c.fetchall()])
 
 # ----- MAIN -----
-if __name__ == "__main__":
+if condition:
+    some_function()  # Indented correctly
+
 app.run(host='0.0.0.0', port=5000, debug=True)
