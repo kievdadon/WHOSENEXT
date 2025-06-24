@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WHOSENXT - Your Life Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f8fc;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #5a3fc0;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 2rem auto;
+      gap: 1rem;
+    }
+    button {
+      padding: 1rem;
+      font-size: 1.1rem;
+      border: none;
+      background-color: #5a3fc0;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4a2faf;
+    }
+    #voice-btn {
+      background-color: #2ec4b6;
+    }
+  </style>
+</head>
+<body>
+  <h1>WHOSENXT</h1>
+  <div class="menu">
+    <button onclick="location.href='/delivery'">🚚 WHOSENXT DELIVERY</button>
+    <button onclick="location.href='/gig'">🛠️ WHOSENXT GIG</button>
+    <button onclick="location.href='/marketplace'">🛍️ WHOSENXT MARKETPLACE</button>
+    <button onclick="location.href='/job'">👷 WHOSENXT JOB</button>
+    <button onclick="location.href='/family'">👨‍👩‍👧 FAMILY GROUP</button>
+    <button id="voice-btn" onclick="activateVoice()">🎙️ Talk to WHOSENXT</button>
+  </div>
+
+  <script>
+    function activateVoice() {
+      const synth = window.speechSynthesis;
+      const msg = new SpeechSynthesisUtterance("Hey, how can I help you today?");
+      msg.pitch = 1;
+      msg.rate = 1;
+      synth.speak(msg);
+    }
+  </script>
+</body>
+</html>
