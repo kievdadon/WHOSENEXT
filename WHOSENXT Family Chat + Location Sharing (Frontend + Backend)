@@ -1,0 +1,231 @@
+from zipfile import ZipFile
+import os
+
+# Directory structure for WHOSENXT Family Chat + Location
+base_dir = "/mnt/data/whosenxt-chat-location"
+os.makedirs(f"{base_dir}/frontend/src", exist_ok=True)
+os.makedirs(f"{base_dir}/frontend/public", exist_ok=True)
+os.makedirs(f"{base_dir}/backend", exist_ok=True)
+
+# FRONTEND FILES
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WHOSENXT Chat + Location</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
+"""
+
+package_json = """
+{
+  "name": "whosenxt-chat-location",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+"""
+
+app_js = """
+import React, { useState } from "react";
+import "./App.css";
+
+function App() {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [locationEnabled, setLocationEnabled] = useState(false);
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (message.trim() !== "") {
+      setMessages([...messages, { text: message, time: new Date().toLocaleTimeString() }]);
+      setMessage("");
+    }
+  };
+
+  const toggleLocation = () => {
+    setLocationEnabled(!locationEnabled);
+    alert("Location " + (locationEnabled ? "disabled" : "enabled"));
+  };
+
+  return (
+    <div className="App">
+      <h1>WHOSENXT Family Chat 👨‍👩‍👧‍👦</h1>
+      <div className="chat-box">
+        {messages.map((msg, idx) => (
+          <div key={idx} className="message">
+            <strong>You:</strong> {msg.text} <span>{msg.time}</span>
+          </div>
+        ))}
+      </div>
+      <form onSubmit={sendMessage}>
+        <input
+          type="text"
+          placeholder="Type a message..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          required
+        />
+        <button type="submit">Send</button>
+      </form>
+
+      <h2>📍 Location Sharing</h2>
+      <button onClick={toggleLocation}>
+        {locationEnabled ? "Disable" : "Enable"} Location
+      </button>
+    </div>
+  );
+}
+
+export default App;
+"""
+
+app_css = """
+body {
+  font-family: sans-serif;
+  background: #f4f4f9;
+  padding: 20px;
+  margin: 0;
+}
+.App {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+h1, h2 {
+  color: #4b0082;
+}
+.chat-box {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+.message {
+  margin-bottom: 10px;
+  text-align: left;
+}
+form input {
+  padding: 10px;
+  width: 70%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+form button {
+  padding: 10px 15px;
+  margin-left: 5px;
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+"""
+
+# BACKEND FILE
+app_py = """
+from flask import Flask, request, jsonify
+import sqlite3
+from datetime import datetime
+import os
+
+app = Flask(__name__)
+
+# ----- DATABASE SETUP -----
+def init_db():
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, user TEXT, message TEXT, timestamp TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS locations (user TEXT PRIMARY KEY, lat REAL, lon REAL, enabled INTEGER)")
+init_db()
+
+# ----- MESSAGE ENDPOINTS -----
+@app.route("/send-message", methods=["POST"])
+def send_message():
+    data = request.json
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO messages (user, message, timestamp) VALUES (?, ?, ?)",
+                  (data["user"], data["message"], datetime.utcnow().isoformat()))
+        conn.commit()
+    return jsonify({"status": "Message saved."})
+
+@app.route("/get-messages", methods=["GET"])
+def get_messages():
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("SELECT user, message, timestamp FROM messages ORDER BY id DESC LIMIT 20")
+        messages = c.fetchall()
+    return jsonify([{"user": m[0], "message": m[1], "timestamp": m[2]} for m in messages])
+
+# ----- LOCATION ENDPOINTS -----
+@app.route("/update-location", methods=["POST"])
+def update_location():
+    data = request.json
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("REPLACE INTO locations (user, lat, lon, enabled) VALUES (?, ?, ?, ?)",
+                  (data["user"], data["lat"], data["lon"], int(data["enabled"])))
+        conn.commit()
+    return jsonify({"status": "Location updated."})
+
+@app.route("/get-locations", methods=["GET"])
+def get_locations():
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("SELECT user, lat, lon, enabled FROM locations")
+        locations = c.fetchall()
+    return jsonify([{"user": l[0], "lat": l[1], "lon": l[2], "enabled": bool(l[3])} for l in locations])
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+"""
+
+# Write frontend files
+with open(f"{base_dir}/frontend/public/index.html", "w") as f:
+    f.write(index_html.strip())
+with open(f"{base_dir}/frontend/package.json", "w") as f:
+    f.write(package_json.strip())
+with open(f"{base_dir}/frontend/src/App.js", "w") as f:
+    f.write(app_js.strip())
+with open(f"{base_dir}/frontend/src/App.css", "w") as f:
+    f.write(app_css.strip())
+
+# Write backend file
+with open(f"{base_dir}/backend/app.py", "w") as f:
+    f.write(app_py.strip())
+
+# Zip it up
+zip_path = "/mnt/data/whosenxt-chat-location.zip"
+with ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(base_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, base_dir)
+            zipf.write(filepath, arcname)
+
+zip_path
