@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apply to Gig</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Apply to Gig: {{ gig.title }}</h1>
+        <form method="post">
+            <label>Your Name:</label><br>
+            <input type="text" name="applicant_name" required><br><br>
+
+            <label>Your Experience (optional):</label><br>
+            <textarea name="applicant_experience" placeholder="Describe relevant experience..."></textarea><br><br>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+</body>
+</html>

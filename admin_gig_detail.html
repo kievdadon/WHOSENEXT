@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gig Detail with Mileage</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        async function calculateDistance() {
+            const origin = document.getElementById("worker_location").value;
+            const destination = document.getElementById("customer_location").innerText;
+
+            const response = await fetch(`/distance?origin=${origin}&destination=${destination}`);
+            const data = await response.json();
+
+            document.getElementById("distance_result").innerText = data.distance_text;
+            document.getElementById("payout_result").innerText = "$" + data.total_payment;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ gig.title }}</h1>
+        <p><strong>Location:</strong> <span id="customer_location">{{ gig.location }}</span></p>
+
+        <label>Your Location:</label><br>
+        <input type="text" id="worker_location" placeholder="123 Worker St, City, State"><br><br>
+        <button onclick="calculateDistance()">Calculate Distance</button><br><br>
+
+        <p><strong>Distance:</strong> <span id="distance_result">-</span></p>
+        <p><strong>Total Payout (Base + Mileage):</strong> <span id="payout_result">-</span></p>
+    </div>
+</body>
+</html>

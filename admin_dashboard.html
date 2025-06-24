@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WHOSENXT Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/admin.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>WHOSENXT Admin Dashboard</h1>
+
+    <div class="summary-cards">
+      <div class="card purple">Total Orders: <span id="totalOrders">--</span></div>
+      <div class="card dark">Active Drivers: <span id="activeDrivers">--</span></div>
+      <div class="card purple">Pending Payouts: <span id="pendingPayouts">$--</span></div>
+    </div>
+
+    <h2>Recent Orders</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Driver</th>
+          <th>Status</th>
+          <th>Amount</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTable">
+        <!-- Order rows populated by backend -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
