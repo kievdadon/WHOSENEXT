@@ -160,3 +160,40 @@ This full backend powers the WHOSENXT app, supporting:
 ## Getting Started
 
 ### 🔧 Install Requirements
+
+### 🚀 Run the App
+
+### 🌐 Deploy to Render.com
+1. Upload this to a GitHub repo
+2. Create a new Web Service on Render
+3. Set Start Command: `python app.py`
+4. Add Environment Variables:
+   - `STRIPE_SECRET_KEY`
+   - `STRIPE_PUBLIC_KEY`
+
+You're ready to launch WHOSENXT!
+'''
+
+# Write files
+with open(os.path.join(final_bundle_dir, "app.py"), "w") as f:
+    f.write(final_app_py.strip())
+
+with open(os.path.join(final_bundle_dir, "requirements.txt"), "w") as f:
+    f.write(final_requirements.strip())
+
+with open(os.path.join(final_bundle_dir, ".env.example"), "w") as f:
+    f.write(env_example_content.strip())
+
+with open(os.path.join(final_bundle_dir, "README.md"), "w") as f:
+    f.write(readme_content.strip())
+
+# Zip it
+final_full_zip = "/mnt/data/WHOSENXT_FULL_DEPLOY_BUNDLE.zip"
+with ZipFile(final_full_zip, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(final_bundle_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, final_bundle_dir)
+            zipf.write(filepath, arcname)
+
+final_full_zip
