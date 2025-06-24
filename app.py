@@ -37,16 +37,16 @@ init_db()
 
 # ----- STRIPE -----
 try:
-        data = request.get_json()
-        amount = data.get("amount")
-        intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency="usd",
-            automatic_payment_methods={"enabled": True},
-        )
-        return jsonify({"clientSecret": intent.client_secret})
-    except Exception as e:
-        return jsonify(error=str(e)), 400
+    data = request.get_json()
+    amount = data.get("amount")
+    intent = stripe.PaymentIntent.create(
+        amount=amount,
+        currency="usd",
+        automatic_payment_methods={"enabled": True},
+    )
+    return jsonify({"clientSecret": intent.client_secret})
+except Exception as e:
+    return jsonify(error=str(e)), 400
 
 # ----- GIG SYSTEM -----
 @app.route("/post-gig", methods=["POST"])
