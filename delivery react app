@@ -1,0 +1,151 @@
+from zipfile import ZipFile
+import os
+
+# Directory structure for WHOSENXT Delivery UI
+base_dir = "/mnt/data/whosenxt-delivery"
+os.makedirs(f"{base_dir}/src/components", exist_ok=True)
+os.makedirs(f"{base_dir}/public", exist_ok=True)
+
+# index.html
+index_html = """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WHOSENXT Delivery</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+"""
+
+# package.json
+package_json = """
+{
+  "name": "whosenxt-delivery",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+"""
+
+# App.js
+app_js = """
+import React, { useState } from "react";
+import "./App.css";
+
+function App() {
+  const [address, setAddress] = useState("");
+  const [items, setItems] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Order placed! (This will connect to your backend.)");
+  };
+
+  return (
+    <div className="App">
+      <h1>WHOSENXT DELIVERY 🚚</h1>
+      <p>Order groceries, meals, or essentials delivered to your door.</p>
+      <form onSubmit={handleSubmit} className="delivery-form">
+        <input
+          type="text"
+          placeholder="Delivery Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
+        <textarea
+          placeholder="What do you need delivered?"
+          value={items}
+          onChange={(e) => setItems(e.target.value)}
+          required
+        />
+        <button type="submit">Place Order</button>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+"""
+
+# App.css
+app_css = """
+body {
+  font-family: sans-serif;
+  background: #f4f4f9;
+  margin: 0;
+  padding: 20px;
+}
+.App {
+  max-width: 600px;
+  margin: auto;
+}
+h1 {
+  color: #4b0082;
+  text-align: center;
+}
+p {
+  text-align: center;
+}
+.delivery-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.delivery-form input,
+.delivery-form textarea {
+  display: block;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.delivery-form button {
+  background-color: #4b0082;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+"""
+
+# Write files
+with open(f"{base_dir}/public/index.html", "w") as f:
+    f.write(index_html.strip())
+
+with open(f"{base_dir}/package.json", "w") as f:
+    f.write(package_json.strip())
+
+with open(f"{base_dir}/src/App.js", "w") as f:
+    f.write(app_js.strip())
+
+with open(f"{base_dir}/src/App.css", "w") as f:
+    f.write(app_css.strip())
+
+# Zip it up
+zip_path = "/mnt/data/whosenxt-delivery.zip"
+with ZipFile(zip_path, 'w') as zipf:
+    for foldername, subfolders, filenames in os.walk(base_dir):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, base_dir)
+            zipf.write(filepath, arcname)
+
+zip_path
