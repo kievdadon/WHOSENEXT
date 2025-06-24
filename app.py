@@ -36,8 +36,7 @@ def init_db():
 init_db()
 
 # ----- STRIPE -----
-
-    try:
+try:
         data = request.get_json()
         amount = data.get("amount")
         intent = stripe.PaymentIntent.create(
