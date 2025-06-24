@@ -5,9 +5,6 @@ import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
-from flask import Flask, request, jsonify, render_template
-
-app = Flask(__name__)
 
 # 👇 Add this homepage route right below
 @app.route("/")
