@@ -1,8 +1,8 @@
 import logging
+import sqlite3
+import stripe
 from flask import Flask, request, jsonify
 import os
-import stripe
-import sqlite3
 from datetime import datetime
 from flask_cors import CORS
 
@@ -23,13 +23,17 @@ stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 def init_db():
     with sqlite3.connect("whosenxt.db") as conn:
         c = conn.cursor()
+        # Create orders table to track orders
         c.execute("""
             CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY,
-                status TEXT,
-                payment_intent_id TEXT
+                status TEXT,  # "pending", "completed", etc.
+                payment_intent_id TEXT,
+                total_amount REAL,
+                delivery_time TEXT
             )
         """)
+        # Create worker_ratings table for storing ratings for workers
         c.execute("""
             CREATE TABLE IF NOT EXISTS worker_ratings (
                 id INTEGER PRIMARY KEY,
@@ -39,6 +43,7 @@ def init_db():
                 timestamp TEXT
             )
         """)
+        # Create support_requests table for storing customer issues
         c.execute("""
             CREATE TABLE IF NOT EXISTS support_requests (
                 id INTEGER PRIMARY KEY,
@@ -47,6 +52,7 @@ def init_db():
             )
         """)
         conn.commit()
+
 
 # ----- Refunds and Cancellations -----
 @app.route("/cancel-order", methods=["POST"])
@@ -68,12 +74,14 @@ def cancel_order():
 
         return jsonify({"error": "Order cannot be canceled."}), 400
 
+
 def refund_payment(payment_intent_id):
     try:
         refund = stripe.Refund.create(payment_intent=payment_intent_id)
         return refund
     except Exception as e:
         return {"error": str(e)}
+
 
 # ----- Order Tracking -----
 @app.route("/track-order/<int:order_id>", methods=["GET"])
@@ -87,6 +95,7 @@ def track_order(order_id):
             return jsonify({"status": order[0]})
         else:
             return jsonify({"error": "Order not found"}), 404
+
 
 # ----- Worker Ratings -----
 @app.route("/rate-worker", methods=["POST"])
@@ -104,6 +113,7 @@ def rate_worker():
 
     return jsonify({"message": "Rating submitted successfully!"})
 
+
 # ----- Customer Support -----
 @app.route("/support", methods=["POST"])
 def support():
@@ -118,6 +128,7 @@ def support():
         conn.commit()
 
     return jsonify({"message": "Support request received!"})
+
 
 if __name__ == "__main__":
     app.logger.debug('Flask app starting')
