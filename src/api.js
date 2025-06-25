@@ -1,7 +1,7 @@
 // api.js
 
-// Replace this with your actual Render URL (for your live backend)
-const BASE_URL = "https://whosenxt-backend.onrender.com";  // Your live backend URL here
+// Replace this with your actual Render backend URL
+const BASE_URL = "https://whosenxt-backend.onrender.com";  // Update this with your live backend URL
 
 // Example function to send data for check-in
 export async function sendCheckin(message) {
@@ -13,6 +13,11 @@ export async function sendCheckin(message) {
             },
             body: JSON.stringify({ message: message }),
         });
+
+        if (!response.ok) {
+            console.error("Failed to send check-in", response.status);
+            throw new Error("Failed to send check-in");
+        }
 
         const data = await response.json();
         return data.reply;  // Assuming backend sends back a reply
@@ -26,6 +31,10 @@ export async function sendCheckin(message) {
 export async function trackOrder(orderId) {
     try {
         const response = await fetch(`${BASE_URL}/track-order/${orderId}`);
+        if (!response.ok) {
+            console.error("Failed to fetch order status", response.status);
+            throw new Error("Failed to fetch order status");
+        }
         const data = await response.json();
         return data;
     } catch (error) {
@@ -49,6 +58,11 @@ export async function rateWorker(workerId, rating, review) {
             }),
         });
 
+        if (!response.ok) {
+            console.error("Failed to submit rating", response.status);
+            throw new Error("Failed to submit rating");
+        }
+
         const data = await response.json();
         return data;
     } catch (error) {
@@ -67,6 +81,11 @@ export async function cancelOrder(orderId) {
             },
             body: JSON.stringify({ order_id: orderId }),
         });
+
+        if (!response.ok) {
+            console.error("Failed to cancel order", response.status);
+            throw new Error("Failed to cancel order");
+        }
 
         const data = await response.json();
         return data;
@@ -91,6 +110,11 @@ export async function completeDelivery(orderId, driverAccountId, driverPercentag
                 company_percentage: companyPercentage,
             }),
         });
+
+        if (!response.ok) {
+            console.error("Failed to complete delivery", response.status);
+            throw new Error("Failed to complete delivery");
+        }
 
         const data = await response.json();
         return data;
