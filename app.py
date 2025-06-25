@@ -54,6 +54,12 @@ def init_db():
         conn.commit()
 
 
+# ----- Home Route -----
+@app.route("/")
+def home():
+    return "Welcome to WHOSENXT API — backend is running!"
+
+
 # ----- Refunds and Cancellations -----
 @app.route("/cancel-order", methods=["POST"])
 def cancel_order():
