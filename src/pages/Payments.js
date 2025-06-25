@@ -5,13 +5,13 @@ function Payment() {
   const [amount, setAmount] = useState("");
   const [clientSecret, setClientSecret] = useState(null);
 
-  const handlePay = async () => {
-    const result = await createPayment(Number(amount));
-    if (result.clientSecret) {
-      setClientSecret(result.clientSecret);
-      alert("PaymentIntent created! Client secret: " + result.clientSecret);
+  const handlePayment = async () => {
+    const response = await createPayment(Number(amount));
+    if (response.clientSecret) {
+      setClientSecret(response.clientSecret);
+      alert("PaymentIntent created successfully!");
     } else {
-      alert("Error: " + result.error);
+      alert("Error creating payment intent");
     }
   };
 
@@ -24,15 +24,14 @@ function Payment() {
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={handlePay}>Create PaymentIntent</button>
+      <button onClick={handlePayment}>Create Payment Intent</button>
 
       {clientSecret && (
-        <p style={{ marginTop: 20 }}>
-          ✅ PaymentIntent created.<br />Client Secret: <code>{clientSecret}</code>
-        </p>
+        <p>Client Secret: {clientSecret}</p>
       )}
     </div>
   );
 }
 
 export default Payment;
+
