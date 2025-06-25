@@ -2,6 +2,8 @@ import logging
 from flask import Flask, request, jsonify
 import os
 import stripe
+import sqlite3
+from datetime import datetime
 from flask_cors import CORS
 
 # Set up logging
@@ -10,34 +12,112 @@ logging.basicConfig(level=logging.DEBUG)
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS
+# Enable CORS for all domains
 CORS(app)
 
 # Set your Stripe secret key
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
-@app.route('/')
-def home():
-    app.logger.debug('Home route accessed')
-    return "Hello, World!"
 
-# Sample route for creating a payment intent
-@app.route("/create-payment-intent", methods=["POST"])
-def create_payment():
-    app.logger.debug('Creating payment intent')
+# ----- DATABASE SETUP -----
+def init_db():
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                id INTEGER PRIMARY KEY,
+                status TEXT,
+                payment_intent_id TEXT
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS worker_ratings (
+                id INTEGER PRIMARY KEY,
+                worker_id INTEGER,
+                rating INTEGER,
+                review TEXT,
+                timestamp TEXT
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS support_requests (
+                id INTEGER PRIMARY KEY,
+                message TEXT,
+                timestamp TEXT
+            )
+        """)
+        conn.commit()
+
+# ----- Refunds and Cancellations -----
+@app.route("/cancel-order", methods=["POST"])
+def cancel_order():
+    order_id = request.json.get("order_id")
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("SELECT payment_intent_id, status FROM orders WHERE id = ?", (order_id,))
+        order = c.fetchone()
+
+        if order and order[1] == "pending":
+            # Update order status to canceled
+            c.execute("UPDATE orders SET status = ? WHERE id = ?", ("canceled", order_id))
+            conn.commit()
+
+            # Issue refund through Stripe
+            refund = refund_payment(order[0])  # payment_intent_id is in the first column
+            return jsonify({"message": "Order canceled and refunded.", "refund": refund})
+
+        return jsonify({"error": "Order cannot be canceled."}), 400
+
+def refund_payment(payment_intent_id):
     try:
-        data = request.get_json()
-        amount = data.get("amount")
-        intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency="usd",
-            automatic_payment_methods={"enabled": True},
-        )
-        app.logger.debug('Payment intent created successfully')
-        return jsonify({"clientSecret": intent.client_secret})
+        refund = stripe.Refund.create(payment_intent=payment_intent_id)
+        return refund
     except Exception as e:
-        app.logger.error(f"Error creating payment intent: {e}")
-        return jsonify(error=str(e)), 400
+        return {"error": str(e)}
+
+# ----- Order Tracking -----
+@app.route("/track-order/<int:order_id>", methods=["GET"])
+def track_order(order_id):
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("SELECT status FROM orders WHERE id = ?", (order_id,))
+        order = c.fetchone()
+
+        if order:
+            return jsonify({"status": order[0]})
+        else:
+            return jsonify({"error": "Order not found"}), 404
+
+# ----- Worker Ratings -----
+@app.route("/rate-worker", methods=["POST"])
+def rate_worker():
+    data = request.json
+    worker_id = data["worker_id"]
+    rating = data["rating"]
+    review = data["review"]
+
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO worker_ratings (worker_id, rating, review, timestamp) VALUES (?, ?, ?, ?)",
+                  (worker_id, rating, review, datetime.now()))
+        conn.commit()
+
+    return jsonify({"message": "Rating submitted successfully!"})
+
+# ----- Customer Support -----
+@app.route("/support", methods=["POST"])
+def support():
+    data = request.json
+    user_message = data.get("message")
+
+    # Save support request to database
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO support_requests (message, timestamp) VALUES (?, ?)",
+                  (user_message, datetime.now()))
+        conn.commit()
+
+    return jsonify({"message": "Support request received!"})
 
 if __name__ == "__main__":
     app.logger.debug('Flask app starting')
