@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 
-function App() {
+function Home() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -64,52 +63,4 @@ function App() {
     const res = await fetch('http://localhost:5000/store/add', {
       method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ item: storeItem }),
-    });
-    const data = await res.json();
-    alert(data.message);
-    setStoreList(data.store_list);
-  };
-
-  const getStoreList = async () => {
-    const res = await fetch('http://localhost:5000/store/list', {
-      method: 'GET',
-      credentials: 'include',
-    });
-    const data = await res.json();
-    setStoreList(data.store_list);
-  };
-
-  return (
-    <div style={{ padding: 20 }}>
-      {!loggedIn ? (
-        <div>
-          <h2>WHOSENXT Login/Signup</h2>
-          <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /><br/>
-          <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} /><br/>
-          <button onClick={signup}>Sign Up</button>
-          <button onClick={login}>Log In</button>
-        </div>
-      ) : (
-        <div>
-          <h2>Welcome to WHOSENXT</h2>
-          <button onClick={startListening}>🎙️ Speak your check-in</button><br/>
-          <textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} cols={50} /><br/>
-          <button onClick={sendCheckin}>Send Check-In</button>
-          <p>Reply: {reply}</p>
-
-          <h3>Store Support</h3>
-          <input placeholder="Add Store Item" value={storeItem} onChange={e => setStoreItem(e.target.value)} />
-          <button onClick={addItem}>Add Item</button>
-          <button onClick={getStoreList}>Get Store List</button>
-          <ul>
-            {storeList.map((item, idx) => <li key={idx}>{item}</li>)}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default App;
+      headers: { 'Content-Type': 'app
