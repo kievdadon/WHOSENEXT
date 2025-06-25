@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000"; // change to your Render URL when deploying
+const BASE_URL = "http://localhost:5000"; // Change to your backend URL when deployed
 
 export async function postGig(gigData) {
   const res = await fetch(`${BASE_URL}/post-gig`, {
@@ -17,7 +17,6 @@ export async function createPayment(amount) {
   });
   return await res.json();
 }
-import Payment from "./pages/Payment"; // ⬅️ add this to the imports
 
-// Add a Route:
-<Route path="/payment" element={<Payment />} />
+// Add more functions as needed (post/store/list, check-in, etc.)
+
