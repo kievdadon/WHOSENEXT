@@ -1,4 +1,7 @@
 Flask==2.1.2
-flask-cors
+Werkzeug==2.1.2
+gunicorn==20.1.0
+flask-cors==6.0.1
 stripe==8.8.0
-gunicorn==20.1.0  # Required for running the app on production
+requests==2.32.4
+setuptools==80.9.0
