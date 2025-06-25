@@ -6,8 +6,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.0",
-    "serve": "^14.0.1",  // This should be here after you install it
-    // ... other dependencies
+    "serve": "^14.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
