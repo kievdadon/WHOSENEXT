@@ -130,6 +130,49 @@ def support():
     return jsonify({"message": "Support request received!"})
 
 
+# ----- Stripe Payouts -----
+def payout_to_driver(driver_account_id, amount):
+    try:
+        # Trigger a payout to the driver’s connected account
+        payout = stripe.Payout.create(
+            amount=amount,  # In cents (e.g., $10 = 1000 cents)
+            currency="usd",
+            destination=driver_account_id,
+        )
+        return payout
+    except stripe.error.StripeError as e:
+        return {"error": str(e)}
+
+@app.route("/complete-delivery", methods=["POST"])
+def complete_delivery():
+    data = request.json
+    order_id = data["order_id"]
+    driver_account_id = data["driver_account_id"]
+    driver_percentage = data["driver_percentage"]  # e.g., 0.7 (70% for the driver)
+    company_percentage = data["company_percentage"]  # e.g., 0.2 (20% for the company)
+
+    with sqlite3.connect("whosenxt.db") as conn:
+        c = conn.cursor()
+        c.execute("SELECT total_amount, payment_intent_id FROM orders WHERE id = ?", (order_id,))
+        order = c.fetchone()
+
+        if order:
+            total_amount = order[0]
+            driver_cut = int(total_amount * driver_percentage)
+            # Company keeps the rest (e.g., 30%)
+            company_cut = int(total_amount * company_percentage)
+
+            # Issue payment to the driver
+            payout_to_driver(driver_account_id, driver_cut)
+
+            # Optionally, handle payment to the company here
+            # For example, you can transfer funds to the company's account
+
+            return jsonify({"message": "Delivery completed and driver paid.", "driver_cut": driver_cut, "company_cut": company_cut})
+
+        return jsonify({"error": "Order not found."}), 404
+
+
 if __name__ == "__main__":
     app.logger.debug('Flask app starting')
     app.run(debug=True)
