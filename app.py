@@ -18,7 +18,6 @@ CORS(app)
 # Set your Stripe secret key
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
-
 # ----- DATABASE SETUP -----
 def init_db():
     with sqlite3.connect("whosenxt.db") as conn:
@@ -52,12 +51,6 @@ def init_db():
             )
         """)
         conn.commit()
-
-
-# ----- Home Route -----
-@app.route("/")
-def home():
-    return "Welcome to WHOSENXT API — backend is running!"
 
 
 # ----- Refunds and Cancellations -----
