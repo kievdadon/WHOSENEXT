@@ -1,19 +1,77 @@
+/* Global styles */
 body {
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  background: #f4f4f9;
+  padding: 0;
+  background-color: #f4f4f9;
 }
+
+/* Navbar styling */
 .navbar {
   display: flex;
-  background: #4b0082;
-  padding: 10px;
+  background-color: #4b0082; /* Deep purple for WHOSENXT */
+  padding: 12px 20px;
   justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
 .navbar a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
 }
+
+.navbar a:hover {
+  background-color: #6a0dad; /* Lighter purple on hover */
+}
+
+/* Main content container */
 .main-content {
-  padding: 20px;
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Form and text elements */
+input, textarea {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #6a0dad;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
 }
