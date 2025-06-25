@@ -1,7 +1,7 @@
 // api.js
 
 // Replace this with your actual Render backend URL
-const BASE_URL = "https://whosenxt-backend.onrender.com";  // Update this with your live backend URL
+const BASE_URL = "https://whosenext-4-fh9z.onrender.com";  // Update this with your live backend URL
 
 // Example function to send data for check-in
 export async function sendCheckin(message) {
