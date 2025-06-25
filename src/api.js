@@ -17,3 +17,7 @@ export async function createPayment(amount) {
   });
   return await res.json();
 }
+import Payment from "./pages/Payment"; // ⬅️ add this to the imports
+
+// Add a Route:
+<Route path="/payment" element={<Payment />} />
