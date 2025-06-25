@@ -57,7 +57,7 @@ def init_db():
 # ----- Home Route -----
 @app.route("/")
 def home():
-    return "Welcome to WHOSENXT API — backend is running!"
+    return "Backend is running!"  # Simple check to confirm the backend is live
 
 
 # ----- Refunds and Cancellations -----
@@ -181,4 +181,4 @@ def complete_delivery():
 
 if __name__ == "__main__":
     app.logger.debug('Flask app starting')
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
