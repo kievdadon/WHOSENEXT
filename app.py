@@ -3,8 +3,10 @@ import os
 import stripe
 import sqlite3
 from datetime import datetime
+from flask_cors import CORS   # 👈 add this
 
 app = Flask(__name__)
+CORS(app)                     # 👈 add this right after
 
 @app.route("/")
 def home():
