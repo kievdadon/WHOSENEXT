@@ -1,6 +1,6 @@
 // api.js
 
-const BASE_URL = "https://whosenext-4-fh9z.onrender.com";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "https://whosenext-4-fh9z.onrender.com";
 
 export async function sendCheckin(message) {
     try {
