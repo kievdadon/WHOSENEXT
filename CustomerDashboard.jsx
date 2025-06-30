@@ -4,43 +4,78 @@ const stores = [
   {
     id: 1,
     name: "Walmart",
-    imageUrl: "https://1000logos.net/wp-content/uploads/2017/05/Walmart-Logo.png",
+    imageUrl:
+      "https://1000logos.net/wp-content/uploads/2017/05/Walmart-Logo.png",
     isOpen: true,
+    distance: "1.2 mi",
   },
   {
     id: 2,
     name: "Popeyes",
-    imageUrl: "https://1000logos.net/wp-content/uploads/2021/04/Popeyes-logo.png",
+    imageUrl:
+      "https://1000logos.net/wp-content/uploads/2021/04/Popeyes-logo.png",
     isOpen: false,
+    distance: "2.4 mi",
   },
   {
     id: 3,
     name: "McDonald's",
-    imageUrl: "https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png",
+    imageUrl:
+      "https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png",
     isOpen: true,
+    distance: "0.9 mi",
   },
   {
     id: 4,
     name: "Sonic",
-    imageUrl: "https://1000logos.net/wp-content/uploads/2018/04/Sonic-Logo-2009.png",
+    imageUrl:
+      "https://1000logos.net/wp-content/uploads/2018/04/Sonic-Logo-2009.png",
     isOpen: true,
+    distance: "1.8 mi",
   },
   {
     id: 5,
     name: "Kim's Wings",
-    imageUrl: "https://via.placeholder.com/150?text=Kim's+Wings", // Replace with real image later
+    imageUrl:
+      "https://via.placeholder.com/150?text=Kim's+Wings",
     isOpen: true,
+    distance: "0.5 mi",
   },
 ];
+
+const mockMenus = {
+  Walmart: [
+    { name: "Milk", price: 3.49, imageUrl: "https://via.placeholder.com/150?text=Milk" },
+    { name: "Bread", price: 2.99, imageUrl: "https://via.placeholder.com/150?text=Bread" },
+  ],
+  Popeyes: [
+    { name: "Chicken Sandwich", price: 4.99, imageUrl: "https://via.placeholder.com/150?text=Chicken+Sandwich" },
+    { name: "Biscuits", price: 1.99, imageUrl: "https://via.placeholder.com/150?text=Biscuits" },
+  ],
+  "McDonald's": [
+    { name: "Big Mac", price: 5.99, imageUrl: "https://via.placeholder.com/150?text=Big+Mac" },
+    { name: "Fries", price: 2.49, imageUrl: "https://via.placeholder.com/150?text=Fries" },
+  ],
+  Sonic: [
+    { name: "Slushie", price: 1.99, imageUrl: "https://via.placeholder.com/150?text=Slushie" },
+    { name: "Chili Dog", price: 3.49, imageUrl: "https://via.placeholder.com/150?text=Chili+Dog" },
+  ],
+  "Kim's Wings": [
+    { name: "Hot Wings", price: 6.99, imageUrl: "https://via.placeholder.com/150?text=Hot+Wings" },
+    { name: "Fries", price: 2.49, imageUrl: "https://via.placeholder.com/150?text=Fries" },
+  ],
+};
 
 export default function CustomerDashboard() {
   const [selectedStore, setSelectedStore] = useState(null);
   const [menu, setMenu] = useState([]);
+  const [search, setSearch] = useState("");
+  const [cart, setCart] = useState([]);
 
   const fetchMenu = async (storeName) => {
     try {
-      const response = await fetch(`https://your-backend-url.com/api/menu/${storeName}`);
-      const data = await response.json();
+      // Mocking the API data
+      const data = { menu: mockMenus[storeName] || [] };
       setMenu(data.menu);
     } catch (error) {
       console.error("Failed to fetch menu:", error);
@@ -54,6 +89,14 @@ export default function CustomerDashboard() {
     }
   };
 
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
+
+  const filteredMenu = menu.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold mb-4">Choose a Store</h1>
@@ -66,25 +109,73 @@ export default function CustomerDashboard() {
             }`}
             onClick={() => handleStoreClick(store)}
           >
-            <img src={store.imageUrl} alt={store.name} className="h-24 object-contain mx-auto mb-2" />
+            <img
+              src={store.imageUrl}
+              alt={store.name}
+              className="h-24 object-contain mx-auto mb-2"
+            />
             <h2 className="text-lg text-center font-semibold">{store.name}</h2>
-            {!store.isOpen && <p className="text-red-500 text-sm text-center">Closed</p>}
+            <p className="text-center text-sm text-gray-500">{store.distance}</p>
+            {!store.isOpen && (
+              <p className="text-red-500 text-sm text-center">Closed</p>
+            )}
           </div>
         ))}
       </div>
 
       {selectedStore && (
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">{selectedStore} Menu</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{selectedStore} Menu</h2>
+            <input
+              type="text"
+              placeholder="Search menu..."
+              className="border px-3 py-1 rounded shadow"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {menu.map((item, index) => (
-              <div key={index} className="border p-4 rounded-xl shadow-md">
-                <img src={item.imageUrl} alt={item.name} className="h-32 object-cover w-full rounded" />
+            {filteredMenu.map((item, index) => (
+              <div
+                key={index}
+                className="border p-4 rounded-xl shadow-md relative"
+              >
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="h-32 object-cover w-full rounded"
+                />
                 <h3 className="text-xl font-semibold mt-2">{item.name}</h3>
                 <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                <button
+                  onClick={() => addToCart(item)}
+                  className="bg-blue-600 text-white mt-2 px-3 py-1 rounded hover:bg-blue-700"
+                >
+                  Add to Cart
+                </button>
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {cart.length > 0 && (
+        <div className="fixed bottom-4 right-4 bg-white border p-4 rounded-xl shadow-xl z-50 w-80">
+          <h3 className="text-lg font-bold mb-2">Cart ({cart.length} items)</h3>
+          <ul className="space-y-1 max-h-48 overflow-y-auto">
+            {cart.map((item, idx) => (
+              <li key={idx} className="text-sm">
+                {item.name} - ${item.price.toFixed(2)}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 font-bold">
+            Total: ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}
+          </p>
+          <button className="w-full bg-green-600 mt-2 text-white px-4 py-2 rounded hover:bg-green-700">
+            Checkout
+          </button>
         </div>
       )}
     </div>
