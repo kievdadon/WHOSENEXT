@@ -44,17 +44,17 @@ const stores = [
 
 export default function CustomerDashboard() {
   const [selectedStore, setSelectedStore] = useState(null);
-  const [categories, setCategories] = useState({});
+  const [menu, setMenu] = useState([]);
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
 
   const fetchMenu = async (storeName) => {
     try {
       const response = await fetch(
-        `https://whosenxt.onrender.com/api/menu/${storeName}`
+        `https://whosenext-4-fh9z.onrender.com/menu/${storeName}`
       );
       const data = await response.json();
-      setCategories(data.categories || {});
+      setMenu(data.menu);
     } catch (error) {
       console.error("Failed to fetch menu:", error);
     }
@@ -71,10 +71,16 @@ export default function CustomerDashboard() {
     setCart([...cart, item]);
   };
 
-  const filterItems = (items) =>
-    items.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
-    );
+  const filteredMenu = menu.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const groupedMenu = filteredMenu.reduce((groups, item) => {
+    const category = item.category || "Other";
+    if (!groups[category]) groups[category] = [];
+    groups[category].push(item);
+    return groups;
+  }, {});
 
   return (
     <div className="p-4">
@@ -114,11 +120,12 @@ export default function CustomerDashboard() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          {Object.entries(categories).map(([category, items]) => (
+
+          {Object.keys(groupedMenu).map((category) => (
             <div key={category} className="mb-6">
               <h3 className="text-xl font-semibold mb-2">{category}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filterItems(items).map((item, index) => (
+                {groupedMenu[category].map((item, index) => (
                   <div
                     key={index}
                     className="border p-4 rounded-xl shadow-md relative"
