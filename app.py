@@ -1,3 +1,14 @@
+import os
+from flask import Flask, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/")
+def home():
+    return "WHOSENXT backend is running!"
+
 @app.route("/api/menu/<store>", methods=["GET"])
 def get_menu(store):
     categorized_menus = {
@@ -31,11 +42,23 @@ def get_menu(store):
             "Drinks": [
                 {"name": "Coca Cola", "price": 1.49, "imageUrl": "https://via.placeholder.com/150?text=Coke"}
             ]
+        },
+        "Kim's Wings": {
+            "Food": [
+                {"name": "Hot Wings (6pc)", "price": 7.99, "imageUrl": "https://via.placeholder.com/150?text=Hot+Wings"},
+                {"name": "Fried Okra", "price": 3.49, "imageUrl": "https://via.placeholder.com/150?text=Fried+Okra"}
+            ],
+            "Drinks": [
+                {"name": "Lemonade", "price": 2.49, "imageUrl": "https://via.placeholder.com/150?text=Lemonade"}
+            ]
         }
-        # Add more stores here...
     }
 
     return jsonify({
         "store": store,
         "categories": categorized_menus.get(store, {})
     })
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
