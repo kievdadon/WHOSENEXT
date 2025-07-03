@@ -3,11 +3,11 @@ import AuthForm from "./AuthForm";
 import ProductSearch from "./ProductSearch";
 import WorkerDashboard from "./WorkerDashboard";
 import AdminDashboard from "./AdminDashboard";
+import VoiceAssistant from "./VoiceAssistant";
 
 function App() {
   const [user, setUser] = useState(null);
 
-  // Try to reload user from localStorage on refresh
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
@@ -35,29 +35,61 @@ function App() {
     setUser(null);
   }
 
-  if (!user) {
-    return <AuthForm onLoginSuccess={handleLoginSuccess} />;
-  }
-
   return (
-    <div style={{ padding: 20 }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>WHOSENXT Dashboard</h1>
-        <div>
-          <strong>{user.username}</strong>{" "}
-          <button onClick={handleLogout} style={{ marginLeft: 12 }}>
-            Logout
-          </button>
-        </div>
+    <div style={styles.wrapper}>
+      <header style={styles.header}>
+        <h1 style={styles.logo}>WHOSENXT</h1>
+        {user && (
+          <div>
+            <strong>{user.username}</strong>{" "}
+            <button onClick={handleLogout} style={styles.logoutBtn}>
+              Logout
+            </button>
+          </div>
+        )}
       </header>
 
-      <hr style={{ margin: "20px 0" }} />
+      <VoiceAssistant />
 
-      {user.is_admin && <AdminDashboard />}
-      {!user.is_admin && user.is_worker && <WorkerDashboard />}
-      {!user.is_admin && !user.is_worker && <ProductSearch />}
+      {!user && <AuthForm onLoginSuccess={handleLoginSuccess} />}
+
+      {user && (
+        <>
+          {user.is_admin && <AdminDashboard />}
+          {user.is_worker && !user.is_admin && <WorkerDashboard />}
+          {!user.is_admin && !user.is_worker && <ProductSearch />}
+        </>
+      )}
     </div>
   );
 }
+
+const styles = {
+  wrapper: {
+    fontFamily: "'Segoe UI', sans-serif",
+    background: "#fafafa",
+    minHeight: "100vh",
+    padding: "20px 16px 80px",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  logo: {
+    fontSize: "28px",
+    color: "#333",
+  },
+  logoutBtn: {
+    marginLeft: 10,
+    background: "#f44336",
+    color: "#fff",
+    border: "none",
+    borderRadius: 6,
+    padding: "6px 12px",
+    cursor: "pointer",
+  },
+};
 
 export default App;
