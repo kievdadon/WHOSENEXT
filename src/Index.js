@@ -1,11 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WHOSENXT App" />
+    <title>WHOSENXT</title>
+  </head>
+  <body>
+    <!-- This is where React will inject your app -->
+    <div id="root"></div>
 
-// Create a root element and render the App component into it
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    <!-- If you're using CRA or Vite, the build system injects scripts below -->
+  </body>
+</html>
