@@ -1,4 +1,3 @@
-// WorkerDashboard.jsx
 import React, { useEffect, useState } from "react";
 import { getWorkerOrders, acceptOrder, updateOrderStatus } from "./api";
 
