@@ -1,4 +1,3 @@
-// ProductSearch.jsx
 import React, { useEffect, useState } from "react";
 import { getProducts, getStoreAvailability } from "./api";
 
@@ -16,10 +15,9 @@ export default function ProductSearch() {
     fetchProducts();
   }, [category, search]);
 
-  // Example: fetch availability for store id 1 (replace as needed)
   useEffect(() => {
     async function fetchAvailability() {
-      const status = await getStoreAvailability(1);
+      const status = await getStoreAvailability(1); // Example store ID
       setStoreStatus(status.is_open ? "Open" : "Closed");
     }
     fetchAvailability();
