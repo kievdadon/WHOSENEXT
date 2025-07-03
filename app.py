@@ -1,45 +1,69 @@
-```python
-# === app.py ===
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import csv, io, os, json
 
 app = Flask(__name__)
 CORS(app)
 
-# Home route for basic health check
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 @app.route("/")
 def home():
     return "WHOSENXT backend is running!"
 
-# Menu endpoint with support for multiple store types
+# Upload store inventory CSV and logo
+@app.route("/api/upload-store", methods=["POST"])
+def upload_store():
+    store_name = request.form.get("store_name")
+    logo = request.files.get("logo")
+    csv_file = request.files.get("csv")
+
+    if not store_name or not csv_file:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    logo_url = None
+    if logo:
+        logo_path = os.path.join(UPLOAD_FOLDER, f"{store_name}_logo.png")
+        logo.save(logo_path)
+        logo_url = f"/static/{store_name}_logo.png"
+
+    stream = io.StringIO(csv_file.stream.read().decode("UTF8"), newline=None)
+    reader = csv.DictReader(stream)
+
+    items = []
+    for row in reader:
+        items.append({
+            "name": row.get("item_name"),
+            "price": float(row.get("price", 0)),
+            "category": row.get("category", "General"),
+            "imageUrl": row.get("image_url", "")
+        })
+
+    data = {
+        "store": store_name,
+        "logo": logo_url,
+        "menu": items
+    }
+
+    with open(f"{UPLOAD_FOLDER}/{store_name}.json", "w") as f:
+        json.dump(data, f)
+
+    return jsonify({"message": f"{store_name} uploaded successfully!"})
+
+# Retrieve menu for a given store
 @app.route("/api/menu/<store>", methods=["GET"])
 def get_menu(store):
-    mock_menus = {
-        "Walmart": [
-            {"name": "Bananas", "price": 1.49, "imageUrl": "https://via.placeholder.com/150?text=Bananas", "category": "Food"},
-            {"name": "Air Fryer", "price": 79.99, "imageUrl": "https://via.placeholder.com/150?text=Air+Fryer", "category": "Appliances"},
-            {"name": "T-Shirt", "price": 12.99, "imageUrl": "https://via.placeholder.com/150?text=T-Shirt", "category": "Clothing"},
-        ],
-        "McDonald's": [
-            {"name": "Big Mac", "price": 5.99, "imageUrl": "https://via.placeholder.com/150?text=Big+Mac", "category": "Food"},
-            {"name": "Fries", "price": 2.49, "imageUrl": "https://via.placeholder.com/150?text=Fries", "category": "Food"},
-        ],
-        "Sonic": [
-            {"name": "Cherry Limeade", "price": 2.99, "imageUrl": "https://via.placeholder.com/150?text=Limeade", "category": "Food"},
-            {"name": "Hot Dog", "price": 3.49, "imageUrl": "https://via.placeholder.com/150?text=Hot+Dog", "category": "Food"},
-        ],
-        "Hollister": [
-            {"name": "Slim Jeans", "price": 39.99, "imageUrl": "https://via.placeholder.com/150?text=Slim+Jeans", "category": "Clothing"},
-            {"name": "Graphic Tee", "price": 19.99, "imageUrl": "https://via.placeholder.com/150?text=Graphic+Tee", "category": "Clothing"},
-        ],
-    }
-    return jsonify({"menu": mock_menus.get(store, [])})
+    try:
+        with open(f"{UPLOAD_FOLDER}/{store}.json", "r") as f:
+            return jsonify(json.load(f))
+    except FileNotFoundError:
+        return jsonify({"menu": [], "error": "Store not found"}), 404
 
 @app.route("/checkin", methods=["POST"])
 def checkin():
     data = request.get_json()
-    message = data.get("message")
-    return jsonify({"reply": f"Thanks for checking in! You said: {message}"})
+    return jsonify({"reply": f"Thanks for checking in! You said: {data.get('message')}"})
 
 @app.route("/track-order/<order_id>", methods=["GET"])
 def track_order(order_id):
@@ -47,7 +71,6 @@ def track_order(order_id):
 
 @app.route("/rate-worker", methods=["POST"])
 def rate_worker():
-    data = request.get_json()
     return jsonify({"message": "Rating submitted successfully."})
 
 @app.route("/cancel-order", methods=["POST"])
@@ -57,96 +80,7 @@ def cancel_order():
 
 @app.route("/complete-delivery", methods=["POST"])
 def complete_delivery():
-    data = request.get_json()
     return jsonify({"message": "Delivery completed and payout processed."})
 
 if __name__ == "__main__":
     app.run(debug=True)
-```
-
-```javascript
-// === api.js ===
-const BASE_URL = "https://whosenext-4-fh9z.onrender.com";
-
-export async function getMenu(storeName) {
-    try {
-        const response = await fetch(BASE_URL + "/api/menu/" + storeName);
-        if (!response.ok) throw new Error("Failed to fetch menu");
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching menu:", error);
-        return { menu: [] };
-    }
-}
-
-export async function sendCheckin(message) {
-    try {
-        const res = await fetch(BASE_URL + "/checkin", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
-        });
-        return await res.json();
-    } catch (err) {
-        console.error("Check-in error:", err);
-        return { error: "Check-in failed" };
-    }
-}
-
-export async function trackOrder(orderId) {
-    try {
-        const res = await fetch(BASE_URL + "/track-order/" + orderId);
-        return await res.json();
-    } catch (err) {
-        console.error("Track order error:", err);
-        return { error: "Tracking failed" };
-    }
-}
-
-export async function rateWorker(workerId, rating, review) {
-    try {
-        const res = await fetch(BASE_URL + "/rate-worker", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ worker_id: workerId, rating, review })
-        });
-        return await res.json();
-    } catch (err) {
-        console.error("Rate worker error:", err);
-        return { error: "Rating failed" };
-    }
-}
-
-export async function cancelOrder(orderId) {
-    try {
-        const res = await fetch(BASE_URL + "/cancel-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ order_id: orderId })
-        });
-        return await res.json();
-    } catch (err) {
-        console.error("Cancel order error:", err);
-        return { error: "Cancellation failed" };
-    }
-}
-
-export async function completeDelivery(orderId, driverAccountId, driverPercentage, companyPercentage) {
-    try {
-        const res = await fetch(BASE_URL + "/complete-delivery", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                order_id: orderId,
-                driver_account_id: driverAccountId,
-                driver_percentage: driverPercentage,
-                company_percentage: companyPercentage,
-            })
-        });
-        return await res.json();
-    } catch (err) {
-        console.error("Complete delivery error:", err);
-        return { error: "Delivery completion failed" };
-    }
-}
-```
