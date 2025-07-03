@@ -1,4 +1,3 @@
-// AuthForm.jsx
 import React, { useState } from "react";
 import { register, login } from "./api";
 
@@ -48,3 +47,24 @@ export default function AuthForm({ onLoginSuccess }) {
           onChange={(e) => setPassword(e.target.value)}
           style={{ width: "100%", padding: 8, marginBottom: 12 }}
         />
+        <button type="submit" style={{ width: "100%", padding: 8 }}>
+          {isRegister ? "Register" : "Login"}
+        </button>
+      </form>
+      {error && (
+        <p style={{ color: "red", marginTop: 10 }}>
+          {error}
+        </p>
+      )}
+      <p style={{ marginTop: 12 }}>
+        {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
+        <button
+          onClick={() => setIsRegister(!isRegister)}
+          style={{ color: "blue", background: "none", border: "none", cursor: "pointer" }}
+        >
+          {isRegister ? "Login" : "Register"}
+        </button>
+      </p>
+    </div>
+  );
+}
