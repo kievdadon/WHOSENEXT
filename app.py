@@ -1,134 +1,152 @@
-import logging
-import sqlite3
-import stripe
-from flask import Flask, request, jsonify
-import os
-from datetime import datetime
+```python
+# === app.py ===
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# Logging setup
-logging.basicConfig(level=logging.DEBUG)
-
-# Flask app initialization
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all domains
+CORS(app)
 
-# Stripe setup
-stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
-
-# Sample menu data per store (replace with real DB logic if needed)
-store_menus = {
-    "Walmart": [
-        {"name": "Apple", "price": 0.99, "imageUrl": "https://via.placeholder.com/150?text=Apple"},
-        {"name": "Microwave", "price": 89.99, "imageUrl": "https://via.placeholder.com/150?text=Microwave"},
-    ],
-    "Popeyes": [
-        {"name": "Chicken Sandwich", "price": 5.49, "imageUrl": "https://via.placeholder.com/150?text=Chicken+Sandwich"},
-        {"name": "Fries", "price": 2.99, "imageUrl": "https://via.placeholder.com/150?text=Fries"},
-    ],
-    "McDonald's": [
-        {"name": "Big Mac", "price": 4.99, "imageUrl": "https://via.placeholder.com/150?text=Big+Mac"},
-        {"name": "McFlurry", "price": 3.49, "imageUrl": "https://via.placeholder.com/150?text=McFlurry"},
-    ],
-    "Sonic": [
-        {"name": "Hot Dog", "price": 3.25, "imageUrl": "https://via.placeholder.com/150?text=Hot+Dog"},
-        {"name": "Slushie", "price": 2.75, "imageUrl": "https://via.placeholder.com/150?text=Slushie"},
-    ],
-    "Kim's Wings": [
-        {"name": "10pc Wings", "price": 9.99, "imageUrl": "https://via.placeholder.com/150?text=10pc+Wings"},
-        {"name": "Fries", "price": 2.99, "imageUrl": "https://via.placeholder.com/150?text=Fries"},
-    ],
-}
-
+# Home route for basic health check
 @app.route("/")
 def home():
-    return "Backend is running!"
+    return "WHOSENXT backend is running!"
 
-@app.route("/menu/<store_name>")
-def get_menu(store_name):
-    store = store_name.strip().title()
-    if store in store_menus:
-        return jsonify({"menu": store_menus[store]})
-    else:
-        return jsonify({"error": "Store not found"}), 404
+# Menu endpoint with support for multiple store types
+@app.route("/api/menu/<store>", methods=["GET"])
+def get_menu(store):
+    mock_menus = {
+        "Walmart": [
+            {"name": "Bananas", "price": 1.49, "imageUrl": "https://via.placeholder.com/150?text=Bananas", "category": "Food"},
+            {"name": "Air Fryer", "price": 79.99, "imageUrl": "https://via.placeholder.com/150?text=Air+Fryer", "category": "Appliances"},
+            {"name": "T-Shirt", "price": 12.99, "imageUrl": "https://via.placeholder.com/150?text=T-Shirt", "category": "Clothing"},
+        ],
+        "McDonald's": [
+            {"name": "Big Mac", "price": 5.99, "imageUrl": "https://via.placeholder.com/150?text=Big+Mac", "category": "Food"},
+            {"name": "Fries", "price": 2.49, "imageUrl": "https://via.placeholder.com/150?text=Fries", "category": "Food"},
+        ],
+        "Sonic": [
+            {"name": "Cherry Limeade", "price": 2.99, "imageUrl": "https://via.placeholder.com/150?text=Limeade", "category": "Food"},
+            {"name": "Hot Dog", "price": 3.49, "imageUrl": "https://via.placeholder.com/150?text=Hot+Dog", "category": "Food"},
+        ],
+        "Hollister": [
+            {"name": "Slim Jeans", "price": 39.99, "imageUrl": "https://via.placeholder.com/150?text=Slim+Jeans", "category": "Clothing"},
+            {"name": "Graphic Tee", "price": 19.99, "imageUrl": "https://via.placeholder.com/150?text=Graphic+Tee", "category": "Clothing"},
+        ],
+    }
+    return jsonify({"menu": mock_menus.get(store, [])})
 
-@app.route("/cancel-order", methods=["POST"])
-def cancel_order():
-    order_id = request.json.get("order_id")
-    with sqlite3.connect("whosenxt.db") as conn:
-        c = conn.cursor()
-        c.execute("SELECT payment_intent_id, status FROM orders WHERE id = ?", (order_id,))
-        order = c.fetchone()
-        if order and order[1] == "pending":
-            c.execute("UPDATE orders SET status = ? WHERE id = ?", ("canceled", order_id))
-            conn.commit()
-            refund = refund_payment(order[0])
-            return jsonify({"message": "Order canceled and refunded.", "refund": refund})
-        return jsonify({"error": "Order cannot be canceled."}), 400
+@app.route("/checkin", methods=["POST"])
+def checkin():
+    data = request.get_json()
+    message = data.get("message")
+    return jsonify({"reply": f"Thanks for checking in! You said: {message}"})
 
-def refund_payment(payment_intent_id):
-    try:
-        refund = stripe.Refund.create(payment_intent=payment_intent_id)
-        return refund
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.route("/track-order/<int:order_id>", methods=["GET"])
+@app.route("/track-order/<order_id>", methods=["GET"])
 def track_order(order_id):
-    with sqlite3.connect("whosenxt.db") as conn:
-        c = conn.cursor()
-        c.execute("SELECT status FROM orders WHERE id = ?", (order_id,))
-        order = c.fetchone()
-        if order:
-            return jsonify({"status": order[0]})
-        else:
-            return jsonify({"error": "Order not found"}), 404
+    return jsonify({"order_id": order_id, "status": "In Transit", "estimated_time": "30 minutes"})
 
 @app.route("/rate-worker", methods=["POST"])
 def rate_worker():
-    data = request.json
-    with sqlite3.connect("whosenxt.db") as conn:
-        c = conn.cursor()
-        c.execute("INSERT INTO worker_ratings (worker_id, rating, review, timestamp) VALUES (?, ?, ?, ?)",
-                  (data["worker_id"], data["rating"], data["review"], datetime.now()))
-        conn.commit()
-    return jsonify({"message": "Rating submitted successfully!"})
+    data = request.get_json()
+    return jsonify({"message": "Rating submitted successfully."})
 
-@app.route("/support", methods=["POST"])
-def support():
-    data = request.json
-    with sqlite3.connect("whosenxt.db") as conn:
-        c = conn.cursor()
-        c.execute("INSERT INTO support_requests (message, timestamp) VALUES (?, ?)",
-                  (data.get("message"), datetime.now()))
-        conn.commit()
-    return jsonify({"message": "Support request received!"})
-
-def payout_to_driver(driver_account_id, amount):
-    try:
-        payout = stripe.Payout.create(
-            amount=amount,
-            currency="usd",
-            destination=driver_account_id,
-        )
-        return payout
-    except stripe.error.StripeError as e:
-        return {"error": str(e)}
+@app.route("/cancel-order", methods=["POST"])
+def cancel_order():
+    data = request.get_json()
+    return jsonify({"message": f"Order {data.get('order_id')} cancelled successfully."})
 
 @app.route("/complete-delivery", methods=["POST"])
 def complete_delivery():
-    data = request.json
-    with sqlite3.connect("whosenxt.db") as conn:
-        c = conn.cursor()
-        c.execute("SELECT total_amount, payment_intent_id FROM orders WHERE id = ?", (data["order_id"],))
-        order = c.fetchone()
-        if order:
-            total = order[0]
-            driver_cut = int(total * data["driver_percentage"])
-            company_cut = int(total * data["company_percentage"])
-            payout_to_driver(data["driver_account_id"], driver_cut)
-            return jsonify({"message": "Delivery complete and driver paid.", "driver_cut": driver_cut, "company_cut": company_cut})
-        return jsonify({"error": "Order not found."}), 404
+    data = request.get_json()
+    return jsonify({"message": "Delivery completed and payout processed."})
 
 if __name__ == "__main__":
     app.run(debug=True)
+```
+
+```javascript
+// === api.js ===
+const BASE_URL = "https://whosenext-4-fh9z.onrender.com";
+
+export async function getMenu(storeName) {
+    try {
+        const response = await fetch(BASE_URL + "/api/menu/" + storeName);
+        if (!response.ok) throw new Error("Failed to fetch menu");
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching menu:", error);
+        return { menu: [] };
+    }
+}
+
+export async function sendCheckin(message) {
+    try {
+        const res = await fetch(BASE_URL + "/checkin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message })
+        });
+        return await res.json();
+    } catch (err) {
+        console.error("Check-in error:", err);
+        return { error: "Check-in failed" };
+    }
+}
+
+export async function trackOrder(orderId) {
+    try {
+        const res = await fetch(BASE_URL + "/track-order/" + orderId);
+        return await res.json();
+    } catch (err) {
+        console.error("Track order error:", err);
+        return { error: "Tracking failed" };
+    }
+}
+
+export async function rateWorker(workerId, rating, review) {
+    try {
+        const res = await fetch(BASE_URL + "/rate-worker", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ worker_id: workerId, rating, review })
+        });
+        return await res.json();
+    } catch (err) {
+        console.error("Rate worker error:", err);
+        return { error: "Rating failed" };
+    }
+}
+
+export async function cancelOrder(orderId) {
+    try {
+        const res = await fetch(BASE_URL + "/cancel-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ order_id: orderId })
+        });
+        return await res.json();
+    } catch (err) {
+        console.error("Cancel order error:", err);
+        return { error: "Cancellation failed" };
+    }
+}
+
+export async function completeDelivery(orderId, driverAccountId, driverPercentage, companyPercentage) {
+    try {
+        const res = await fetch(BASE_URL + "/complete-delivery", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                order_id: orderId,
+                driver_account_id: driverAccountId,
+                driver_percentage: driverPercentage,
+                company_percentage: companyPercentage,
+            })
+        });
+        return await res.json();
+    } catch (err) {
+        console.error("Complete delivery error:", err);
+        return { error: "Delivery completion failed" };
+    }
+}
+```
