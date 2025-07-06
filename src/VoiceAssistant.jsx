@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Check browser support
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
 export default function VoiceAssistant() {
@@ -46,70 +44,106 @@ export default function VoiceAssistant() {
   }
 
   function handleReply(inputText) {
-    // Simple rules-based response (or call your backend here)
     let response = "I'm here for you.";
     const lower = inputText.toLowerCase();
 
     if (lower.includes("hello")) response = "Hi there!";
     else if (lower.includes("how are you")) response = "I'm doing well, thank you.";
-    else if (lower.includes("check in") || lower.includes("wellness"))
-      response = "Let me know how you're feeling today.";
+    else if (lower.includes("check in")) response = "How are you feeling today?";
     else if (lower.includes("thank you")) response = "You're welcome!";
-    else if (lower.includes("who's next")) response = "You are next. Let’s do this together.";
+    else if (lower.includes("who's next")) response = "You are. Let's get started.";
 
     setReply(response);
     speak(response);
   }
 
   return (
-    <div style={styles.container}>
-      <h2>🎤 WHOSENXT Voice Assistant</h2>
+    <div style={styles.wrapper}>
+      <div style={styles.card}>
+        <h2 style={styles.title}>🎤 Talk to WHOSENXT</h2>
 
-      <button style={styles.button} onClick={startListening} disabled={isListening}>
-        {isListening ? "Listening..." : "Next"}
-      </button>
+        <button
+          style={isListening ? styles.listeningBtn : styles.listenBtn}
+          onClick={startListening}
+          disabled={isListening}
+        >
+          {isListening ? "Listening..." : "Next"}
+        </button>
 
-      <div style={styles.box}>
-        <strong>You said:</strong>
-        <p>{message || "Tap the button and speak..."}</p>
-      </div>
-
-      {reply && (
         <div style={styles.box}>
-          <strong>WHOSENXT replied:</strong>
-          <p>{reply}</p>
+          <label style={styles.label}>You said:</label>
+          <p style={styles.text}>{message || "Press 'Next' and speak..."}</p>
         </div>
-      )}
+
+        {reply && (
+          <div style={styles.box}>
+            <label style={styles.label}>WHOSENXT replied:</label>
+            <p style={styles.text}>{reply}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 const styles = {
-  container: {
-    maxWidth: 500,
-    margin: "40px auto",
+  wrapper: {
+    backgroundColor: "#F3E5F5", // light lavender
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    borderRadius: 16,
-    backgroundColor: "#f4f4f4",
-    fontFamily: "'Segoe UI', sans-serif",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-    textAlign: "center",
   },
-  button: {
-    padding: "12px 20px",
-    fontSize: 18,
-    borderRadius: 12,
-    backgroundColor: "#4A90E2",
+  card: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 30,
+    maxWidth: 400,
+    width: "100%",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+    textAlign: "center",
+    fontFamily: "'Baloo 2', cursive",
+  },
+  title: {
+    fontSize: "24px",
+    color: "#6A1B9A", // deeper purple
+    marginBottom: 20,
+  },
+  listenBtn: {
+    backgroundColor: "#8E24AA",
     color: "#fff",
+    padding: "12px 24px",
+    fontSize: 18,
     border: "none",
+    borderRadius: 12,
     cursor: "pointer",
-    marginTop: 12,
+    marginBottom: 20,
+  },
+  listeningBtn: {
+    backgroundColor: "#CE93D8",
+    color: "#333",
+    padding: "12px 24px",
+    fontSize: 18,
+    border: "none",
+    borderRadius: 12,
+    marginBottom: 20,
+    cursor: "not-allowed",
   },
   box: {
-    background: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 20,
+    backgroundColor: "#F8F4FC",
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 12,
     textAlign: "left",
+  },
+  label: {
+    fontWeight: "bold",
+    color: "#6A1B9A",
+  },
+  text: {
+    margin: "8px 0 0",
+    fontSize: 16,
+    color: "#333",
   },
 };
