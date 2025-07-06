@@ -1,65 +1,40 @@
-import FamilyGroup from "./FamilyGroup";
-import MarketplaceBoard from "./MarketplaceBoard";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AuthForm from "./AuthForm";
-import ProductSearch from "./ProductSearch";
+import VoiceAssistant from "./VoiceAssistant";
 import WorkerDashboard from "./WorkerDashboard";
 import AdminDashboard from "./AdminDashboard";
-import VoiceAssistant from "./VoiceAssistant";
+import ProductSearch from "./ProductSearch";
+import MarketplaceBoard from "./MarketplaceBoard";
+import FamilyGroup from "./FamilyGroup";
 
-function App() {
+export default function App() {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-    const is_worker = localStorage.getItem("is_worker") === "true";
-    const is_admin = localStorage.getItem("is_admin") === "true";
-    if (token && username) {
-      setUser({ username, is_worker, is_admin });
-    }
-  }, []);
-
-  function handleLoginSuccess(res) {
-    localStorage.setItem("token", res.access_token);
-    localStorage.setItem("username", res.username);
-    localStorage.setItem("is_worker", res.is_worker);
-    localStorage.setItem("is_admin", res.is_admin);
-    setUser({
-      username: res.username,
-      is_worker: res.is_worker,
-      is_admin: res.is_admin,
-    });
-  }
-
-  function handleLogout() {
-    localStorage.clear();
-    setUser(null);
-  }
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
 
   return (
     <div style={styles.wrapper}>
-      <header style={styles.header}>
-        <h1 style={styles.logo}>WHOSENXT</h1>
-        {user && (
-          <div>
-            <strong>{user.username}</strong>{" "}
-            <button onClick={handleLogout} style={styles.logoutBtn}>
-              Logout
-            </button>
-          </div>
-        )}
-      </header>
+      <h1 style={styles.logo}>WHOSENXT</h1>
 
-      <VoiceAssistant />
-
-      {!user && <AuthForm onLoginSuccess={handleLoginSuccess} />}
-
-      {user && (
+      {!user ? (
+        <AuthForm onLoginSuccess={handleLogin} />
+      ) : (
         <>
+          {/* AI Assistant always shown */}
+          <VoiceAssistant />
+
+          {/* Role-based dashboards */}
           {user.is_admin && <AdminDashboard />}
           {user.is_worker && !user.is_admin && <WorkerDashboard />}
           {!user.is_admin && !user.is_worker && <ProductSearch />}
+
+          {/* Marketplace board for everyone */}
+          <MarketplaceBoard />
+
+          {/* Family group for all */}
+          <FamilyGroup />
         </>
       )}
     </div>
@@ -68,30 +43,16 @@ function App() {
 
 const styles = {
   wrapper: {
-    fontFamily: "'Segoe UI', sans-serif",
-    background: "#fafafa",
+    fontFamily: "'Baloo 2', cursive",
+    background: "#F3E5F5",
     minHeight: "100vh",
-    padding: "20px 16px 80px",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
+    padding: 24,
   },
   logo: {
-    fontSize: "28px",
-    color: "#333",
-  },
-  logoutBtn: {
-    marginLeft: 10,
-    background: "#f44336",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-    padding: "6px 12px",
-    cursor: "pointer",
+    color: "#6A1B9A",
+    fontSize: 32,
+    textAlign: "center",
+    marginBottom: 20,
   },
 };
 
-export default App;
