@@ -1,3 +1,4 @@
+import MarketplaceBoard from "./MarketplaceBoard";
 import React, { useState, useEffect } from "react";
 import AuthForm from "./AuthForm";
 import ProductSearch from "./ProductSearch";
