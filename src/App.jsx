@@ -7,6 +7,10 @@ import GigBoard from "./pages/GigBoard";
 import FamilyGroup from "./pages/FamilyGroup";  // ✅ only this one
 import DriverApply from "./pages/DriverApply";
 import AuthForm from "./AuthForm";
+import StoreUpload from './pages/StoreUpload';
+
+// In Routes:
+<Route path="/upload-store" element={<StoreUpload />} />
 
 function App() {
   const [user, setUser] = useState(null);
