@@ -1,51 +1,38 @@
-import React, { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import HomeScreen from "./pages/HomeScreen";
-import DeliveryScreen from "./pages/DeliveryScreen";
-import MarketplaceBoard from "./pages/MarketplaceBoard";
-import GigBoard from "./pages/GigBoard";
-import FamilyGroup from "./pages/FamilyGroup";  // ✅ only this one
-import DriverApply from "./pages/DriverApply";
-import AuthForm from "./AuthForm";
-import StoreUpload from './pages/StoreUpload';
-
-// In Routes:
-<Route path="/upload-store" element={<StoreUpload />} />
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";  // Add Route here
+import StoreUpload from "./pages/StoreUpload";
+import MarketplaceFeed from "./pages/MarketplaceFeed";
+import PostMarketplaceItem from "./pages/PostMarketplaceItem";
+import GigFeed from "./pages/GigFeed";
+import PostGig from "./pages/PostGig";
+import PayoutForm from "./pages/PayoutForm";
+import FamilyGroupChat from "./pages/FamilyGroupChat";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [page, setPage] = useState("home");
-
-  if (!user) {
-    return <AuthForm onLoginSuccess={(u) => setUser(u)} />;
-  }
-
-  let content;
-  switch (page) {
-    case "delivery":
-      content = <DeliveryScreen />;
-      break;
-    case "marketplace":
-      content = <MarketplaceBoard />;
-      break;
-    case "gigs":
-      content = <GigBoard />;
-      break;
-    case "family":
-      content = <FamilyGroup />;
-      break;
-    case "apply":
-      content = <DriverApply />;
-      break;
-    default:
-      content = <HomeScreen />;
-  }
-
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar onNavigate={setPage} />
-      <div style={{ flex: 1, padding: "20px", overflowY: "auto" }}>{content}</div>
-    </div>
+    <Router>
+      <div style={{ padding: 20 }}>
+        <h1>WHOSENXT</h1>
+        <Routes>
+          {/* Store Routes */}
+          <Route path="/upload-store" element={<StoreUpload />} />
+          
+          {/* Marketplace Routes */}
+          <Route path="/marketplace/feed" element={<MarketplaceFeed />} />
+          <Route path="/marketplace/post" element={<PostMarketplaceItem />} />
+
+          {/* Gig Routes */}
+          <Route path="/gig/feed" element={<GigFeed />} />
+          <Route path="/gig/post" element={<PostGig />} />
+
+          {/* Payout Routes */}
+          <Route path="/payout" element={<PayoutForm />} />
+
+          {/* Family Chat Routes */}
+          <Route path="/family/group/:groupId" element={<FamilyGroupChat />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
