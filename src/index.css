@@ -1,6 +1,33 @@
+/* Global styling and animation */
+
 body {
   margin: 0;
-  font-family: 'Baloo 2', sans-serif;
-  background-color: #F3E5F5;
-  color: #4A148C;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f5fc;
+  color: #333;
+}
+
+/* Floating emoji animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Reset buttons */
+button {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+/* Input global tweaks */
+input {
+  font-family: inherit;
+  font-size: 16px;
 }
