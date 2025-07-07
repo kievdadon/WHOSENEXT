@@ -1,86 +1,45 @@
 import React, { useState } from "react";
 
 export default function FamilyGroup() {
-  const [messages, setMessages] = useState([
-    { sender: "Mom", content: "Dinner is ready!" },
-    { sender: "You", content: "On my way!" },
-  ]);
+  const [messages, setMessages] = useState(["Hi fam! Dinner at 6 🍽"]);
 
-  const [newMessage, setNewMessage] = useState("");
-
-  const handleSend = () => {
-    if (!newMessage.trim()) return;
-    const updated = [...messages, { sender: "You", content: newMessage }];
-    setMessages(updated);
-    setNewMessage("");
+  const handleAdd = () => {
+    const msg = prompt("Enter your message:");
+    if (msg) setMessages([...messages, msg]);
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>👨‍👩‍👧 Family Group Chat</h2>
-      <div style={styles.chatBox}>
+    <div>
+      <h2>Family Group 👨‍👩‍👧</h2>
+      <button onClick={handleAdd} style={styles.button}>Add Message</button>
+      <ul style={styles.list}>
         {messages.map((msg, i) => (
-          <div key={i} style={styles.message}>
-            <strong>{msg.sender}:</strong> {msg.content}
-          </div>
+          <li key={i} style={styles.msg}>{msg}</li>
         ))}
-      </div>
-      <div style={styles.inputArea}>
-        <input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          style={styles.input}
-        />
-        <button onClick={handleSend} style={styles.sendButton}>
-          Send
-        </button>
-      </div>
+      </ul>
     </div>
   );
 }
 
 const styles = {
-  container: {
-    maxWidth: 600,
-    margin: "40px auto",
-    background: "#fff",
-    padding: 20,
-    borderRadius: 16,
-    boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
-  },
-  title: {
-    textAlign: "center",
-    color: "#6A1B9A",
-    marginBottom: 20,
-  },
-  chatBox: {
-    maxHeight: 300,
-    overflowY: "auto",
-    border: "1px solid #ddd",
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  message: {
-    marginBottom: 10,
-  },
-  inputArea: {
-    display: "flex",
-    gap: 10,
-  },
-  input: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 8,
-    border: "1px solid #ccc",
-  },
-  sendButton: {
-    padding: "10px 16px",
-    background: "#8E24AA",
-    color: "#fff",
+  button: {
+    background: "#9575CD",
+    color: "white",
+    padding: "8px 14px",
+    borderRadius: "8px",
     border: "none",
-    borderRadius: 8,
+    marginTop: 10,
     cursor: "pointer",
+  },
+  list: {
+    marginTop: 15,
+    paddingLeft: 0,
+  },
+  msg: {
+    background: "#D1C4E9",
+    padding: "10px",
+    borderRadius: "10px",
+    marginBottom: "10px",
+    listStyle: "none",
   },
 };
