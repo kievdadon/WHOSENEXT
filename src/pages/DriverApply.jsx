@@ -31,18 +31,3 @@ const styles = {
     margin: "auto",
     display: "flex",
     flexDirection: "column",
-    gap: "12px",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    background: "#7E57C2",
-    color: "white",
-    padding: "10px",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: "bo
