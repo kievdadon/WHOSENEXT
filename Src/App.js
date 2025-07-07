@@ -1,32 +1,35 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import Marketplace from "./pages/Marketplace";
-import Gigs from "./pages/Gigs";
-import Delivery from "./pages/Delivery";
-import Family from "./pages/Family";
-import Payment from "./pages/Payment";
-import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import StoreUpload from "./pages/StoreUpload";
+import MarketplaceFeed from "./pages/MarketplaceFeed";
+import PostMarketplaceItem from "./pages/PostMarketplaceItem";
+import GigFeed from "./pages/GigFeed";
+import PostGig from "./pages/PostGig";
+import PayoutForm from "./pages/PayoutForm";
+import FamilyGroupChat from "./pages/FamilyGroupChat";
 
 function App() {
   return (
     <Router>
-      <div className="navbar">
-        <Link to="/">🏠 Home</Link>
-        <Link to="/marketplace">🛒 Marketplace</Link>
-        <Link to="/gigs">🎯 Gigs</Link>
-        <Link to="/delivery">🚚 Delivery</Link>
-        <Link to="/family">👨‍👩‍👧‍👦 Family</Link>
-        <Link to="/payment">💳 Payment</Link>
-      </div>
-      <div className="main-content">
+      <div style={{ padding: 20 }}>
+        <h1>WHOSENXT</h1>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/gigs" element={<Gigs />} />
-          <Route path="/delivery" element={<Delivery />} />
-          <Route path="/family" element={<Family />} />
-          <Route path="/payment" element={<Payment />} />
+          {/* Store Routes */}
+          <Route path="/upload-store" element={<StoreUpload />} />
+          
+          {/* Marketplace Routes */}
+          <Route path="/marketplace/feed" element={<MarketplaceFeed />} />
+          <Route path="/marketplace/post" element={<PostMarketplaceItem />} />
+
+          {/* Gig Routes */}
+          <Route path="/gig/feed" element={<GigFeed />} />
+          <Route path="/gig/post" element={<PostGig />} />
+
+          {/* Payout Routes */}
+          <Route path="/payout" element={<PayoutForm />} />
+
+          {/* Family Chat Routes */}
+          <Route path="/family/group/:groupId" element={<FamilyGroupChat />} />
         </Routes>
       </div>
     </Router>
