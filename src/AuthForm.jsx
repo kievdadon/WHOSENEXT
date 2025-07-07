@@ -6,67 +6,97 @@ export default function AuthForm({ onLoginSuccess }) {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-    // 🔐 Simulate login (replace with real API if needed)
     const mockUser = {
       name: "Test User",
       email,
       is_admin: email.includes("admin"),
       is_worker: email.includes("worker"),
     };
-
     onLoginSuccess(mockUser);
   };
 
   return (
-    <form onSubmit={handleLogin} style={styles.form}>
-      <h2 style={styles.title}>WHOSENXT Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={styles.input}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={styles.input}
-        required
-      />
-      <button type="submit" style={styles.button}>
-        Login
-      </button>
-    </form>
+    <div style={styles.background}>
+      <div style={styles.floatingEmoji}>💵</div>
+      <div style={{ ...styles.floatingEmoji, top: "10%", left: "75%" }}>🛍️</div>
+      <div style={{ ...styles.floatingEmoji, top: "50%", left: "10%" }}>🚗</div>
+      <div style={{ ...styles.floatingEmoji, top: "70%", left: "60%" }}>🛋️</div>
+
+      <form onSubmit={handleLogin} style={styles.form}>
+        <h2 style={styles.title}>WHOSENXT Login</h2>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={styles.input}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
+          required
+        />
+
+        <button type="submit" style={styles.loginButton}>Login</button>
+
+        <div style={styles.divider}>or</div>
+
+        <button style={styles.socialButton}>Continue with Google</button>
+        <button style={styles.socialButton}>Continue with iCloud</button>
+
+        <p style={styles.signupText}>
+          New to WHOSENXT? <a href="#" style={styles.link}>Sign up here</a>
+        </p>
+      </form>
+    </div>
   );
 }
 
 const styles = {
+  background: {
+    position: "relative",
+    background: "linear-gradient(to bottom right, #F3E5F5, #E1BEE7)",
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  floatingEmoji: {
+    position: "absolute",
+    fontSize: 40,
+    opacity: 0.1,
+    animation: "float 10s infinite ease-in-out",
+  },
   form: {
-    maxWidth: 320,
-    margin: "80px auto",
     background: "#fff",
-    padding: 20,
+    padding: 30,
     borderRadius: 16,
-    boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
+    maxWidth: 350,
+    width: "90%",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+    zIndex: 1,
   },
   title: {
     marginBottom: 20,
+    fontSize: 26,
     color: "#6A1B9A",
-    fontSize: 24,
     textAlign: "center",
   },
   input: {
     width: "100%",
-    padding: 10,
+    padding: 12,
     marginBottom: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     border: "1px solid #ccc",
+    fontSize: 14,
   },
-  button: {
+  loginButton: {
     width: "100%",
     padding: 12,
     background: "#8E24AA",
@@ -75,5 +105,33 @@ const styles = {
     border: "none",
     borderRadius: 10,
     cursor: "pointer",
+    fontSize: 15,
+  },
+  divider: {
+    textAlign: "center",
+    margin: "16px 0",
+    color: "#999",
+  },
+  socialButton: {
+    width: "100%",
+    padding: 12,
+    background: "#EDE7F6",
+    color: "#4A148C",
+    fontWeight: "bold",
+    border: "none",
+    borderRadius: 10,
+    marginBottom: 10,
+    cursor: "pointer",
+  },
+  signupText: {
+    textAlign: "center",
+    marginTop: 14,
+    fontSize: 14,
+    color: "#555",
+  },
+  link: {
+    color: "#6A1B9A",
+    fontWeight: "bold",
+    textDecoration: "none",
   },
 };
