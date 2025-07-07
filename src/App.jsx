@@ -1,3 +1,4 @@
+import FamilyGroup from "./FamilyGroup";
 import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import HomeScreen from "./pages/HomeScreen";
