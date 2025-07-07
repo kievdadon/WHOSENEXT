@@ -21,36 +21,34 @@ export default function App() {
   const renderMain = () => {
     if (!user) return <AuthForm onLoginSuccess={handleLogin} />;
 
-    if (screen === "home") return <HomeScreen />;
-
-    return (
-      <>
-        <VoiceAssistant />
-
-        {user.is_admin && (
-          <>
-            <AdminDashboard />
-            <AdminPayoutTracker />
-          </>
-        )}
-
-        {user.is_worker && !user.is_admin && (
+    switch (screen) {
+      case "home":
+        return <HomeScreen setScreen={setScreen} />;
+      case "voice":
+        return <VoiceAssistant />;
+      case "order":
+        return <ProductSearch />;
+      case "marketplace":
+        return <MarketplaceBoard />;
+      case "family":
+        return <FamilyGroup />;
+      case "worker":
+        return (
           <>
             <WorkerDashboard />
             <WorkerPayoutDashboard />
           </>
-        )}
-
-        {!user.is_admin && !user.is_worker && (
+        );
+      case "admin":
+        return (
           <>
-            <ProductSearch />
+            <AdminDashboard />
+            <AdminPayoutTracker />
           </>
-        )}
-
-        <MarketplaceBoard />
-        <FamilyGroup />
-      </>
-    );
+        );
+      default:
+        return <HomeScreen setScreen={setScreen} />;
+    }
   };
 
   return (
@@ -59,7 +57,13 @@ export default function App() {
         {user && (
           <>
             <button onClick={() => setScreen("home")} style={styles.btn}>🏠 Home</button>
-            <button onClick={() => setScreen("full")} style={styles.btn}>🔧 Full App</button>
+            <button onClick={() => setScreen("voice")} style={styles.btn}>🎙️ Voice</button>
+            <button onClick={() => setScreen("order")} style={styles.btn}>🛍️ Order</button>
+            <button onClick={() => setScreen("marketplace")} style={styles.btn}>🏠 Marketplace</button>
+            <button onClick={() => setScreen("family")} style={styles.btn}>👨‍👩‍👧 Family</button>
+            <button onClick={() => setScreen(user.is_admin ? "admin" : "worker")} style={styles.btn}>
+              {user.is_admin ? "🧾 Admin" : "💼 Worker"}
+            </button>
             <button onClick={() => setUser(null)} style={styles.btn}>🚪 Log Out</button>
           </>
         )}
@@ -80,7 +84,8 @@ const styles = {
   nav: {
     display: "flex",
     justifyContent: "center",
-    gap: 12,
+    gap: 10,
+    flexWrap: "wrap",
     marginBottom: 16,
   },
   btn: {
@@ -93,3 +98,4 @@ const styles = {
     cursor: "pointer",
   },
 };
+
