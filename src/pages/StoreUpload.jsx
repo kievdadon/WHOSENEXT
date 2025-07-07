@@ -18,15 +18,15 @@ function StoreUpload() {
         body: formData,
       });
       const data = await res.json();
-      setMessage(data.message || data.error);
+      setMessage(data.message);
     } catch (err) {
-      console.error(err);
-      setMessage("Upload failed.");
+      console.error("Upload failed:", err);
+      setMessage("Failed to upload.");
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <h2>Upload a Store</h2>
       <input
         type="text"
@@ -39,7 +39,7 @@ function StoreUpload() {
       <br /><br />
       <input type="file" accept=".csv" onChange={(e) => setCsv(e.target.files[0])} />
       <br /><br />
-      <button onClick={handleUpload}>Upload</button>
+      <button onClick={handleUpload}>Upload Store</button>
       <p>{message}</p>
     </div>
   );
