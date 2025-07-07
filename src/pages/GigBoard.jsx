@@ -1,21 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
+
+const sampleGigs = [
+  {
+    id: 1,
+    title: "Help move a couch",
+    description: "Need help moving a couch down from 3rd floor apartment to curb.",
+    pay: "$60",
+    image: "https://i.imgur.com/YOZbQ5R.jpg",
+  },
+  {
+    id: 2,
+    title: "Yard work needed",
+    description: "Weeding, bagging leaves, general cleanup — small front yard.",
+    pay: "$45",
+    image: "https://i.imgur.com/URf7tF3.jpg",
+  },
+  {
+    id: 3,
+    title: "Assemble IKEA furniture",
+    description: "1 dresser and 1 nightstand, IKEA flat-pack assembly. Tools provided.",
+    pay: "$35",
+    image: "https://i.imgur.com/Bp3gQFH.jpg",
+  },
+];
 
 export default function GigBoard() {
-  const gigs = [
-    { title: "Move Furniture", pay: "$100", emoji: "📦" },
-    { title: "Help with Lawn", pay: "$60", emoji: "🌱" },
-  ];
+  const [appliedGigId, setAppliedGigId] = useState(null);
+
+  const handleApply = (id) => {
+    setAppliedGigId(id);
+    setTimeout(() => {
+      alert("✅ Application submitted! You’ll get a response soon.");
+    }, 300);
+  };
 
   return (
-    <div>
-      <h2>WHOSENXT GIGS 📋</h2>
-      <div style={styles.list}>
-        {gigs.map((gig, i) => (
-          <div key={i} style={styles.card}>
-            <div style={{ fontSize: 32 }}>{gig.emoji}</div>
-            <h4>{gig.title}</h4>
-            <p>{gig.pay}</p>
-            <button style={styles.button}>Apply</button>
+    <div style={styles.container}>
+      <h2>📋 WHOSENXT Gigs</h2>
+      <div style={styles.grid}>
+        {sampleGigs.map((gig) => (
+          <div key={gig.id} style={styles.card}>
+            <img src={gig.image} alt="gig" style={styles.image} />
+            <h3>{gig.title}</h3>
+            <p>{gig.description}</p>
+            <p><strong>{gig.pay}</strong></p>
+            <button
+              onClick={() => handleApply(gig.id)}
+              style={{
+                ...styles.button,
+                backgroundColor: appliedGigId === gig.id ? "#ccc" : "#6A1B9A",
+              }}
+              disabled={appliedGigId === gig.id}
+            >
+              {appliedGigId === gig.id ? "Applied ✅" : "Apply"}
+            </button>
           </div>
         ))}
       </div>
@@ -24,26 +62,35 @@ export default function GigBoard() {
 }
 
 const styles = {
-  list: {
+  container: {
+    padding: 24,
+  },
+  grid: {
     display: "flex",
-    gap: "20px",
-    marginTop: 20,
+    gap: 20,
+    flexWrap: "wrap",
   },
   card: {
+    backgroundColor: "#f7ebff",
+    borderRadius: 12,
     padding: 16,
-    background: "#FCE4EC",
-    borderRadius: 10,
-    textAlign: "center",
-    width: 180,
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    width: 280,
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+  },
+  image: {
+    width: "100%",
+    height: 160,
+    objectFit: "cover",
+    borderRadius: 8,
+    marginBottom: 12,
   },
   button: {
-    marginTop: 10,
-    background: "#EC407A",
+    width: "100%",
+    padding: "10px 16px",
+    fontSize: 16,
+    color: "white",
     border: "none",
-    padding: "8px 16px",
     borderRadius: 8,
-    color: "#fff",
     cursor: "pointer",
   },
 };
