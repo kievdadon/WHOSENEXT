@@ -17,11 +17,13 @@ export default function AuthForm({ onLoginSuccess }) {
 
   return (
     <div style={styles.background}>
-      <div style={styles.floatingEmoji}>💵</div>
-      <div style={{ ...styles.floatingEmoji, top: "10%", left: "75%" }}>🛍️</div>
-      <div style={{ ...styles.floatingEmoji, top: "50%", left: "10%" }}>🚗</div>
-      <div style={{ ...styles.floatingEmoji, top: "70%", left: "60%" }}>🛋️</div>
+      {/* Floating Emojis */}
+      <div style={{ ...styles.floatingEmoji, top: "15%", left: "10%" }}>💵</div>
+      <div style={{ ...styles.floatingEmoji, top: "40%", left: "75%" }}>👕</div>
+      <div style={{ ...styles.floatingEmoji, top: "60%", left: "20%" }}>🚗</div>
+      <div style={{ ...styles.floatingEmoji, top: "80%", left: "65%" }}>🛋️</div>
 
+      {/* Login Form */}
       <form onSubmit={handleLogin} style={styles.form}>
         <h2 style={styles.title}>WHOSENXT Login</h2>
 
@@ -46,8 +48,8 @@ export default function AuthForm({ onLoginSuccess }) {
 
         <div style={styles.divider}>or</div>
 
-        <button style={styles.socialButton}>Continue with Google</button>
-        <button style={styles.socialButton}>Continue with iCloud</button>
+        <button type="button" style={styles.socialButton}>Continue with Google</button>
+        <button type="button" style={styles.socialButton}>Continue with iCloud</button>
 
         <p style={styles.signupText}>
           New to WHOSENXT? <a href="#" style={styles.link}>Sign up here</a>
@@ -69,9 +71,9 @@ const styles = {
   },
   floatingEmoji: {
     position: "absolute",
-    fontSize: 40,
-    opacity: 0.1,
-    animation: "float 10s infinite ease-in-out",
+    fontSize: 44,
+    opacity: 0.08,
+    animation: "float 8s ease-in-out infinite",
   },
   form: {
     background: "#fff",
