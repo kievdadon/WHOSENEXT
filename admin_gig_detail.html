@@ -1,32 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Gig Detail with Mileage</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script>
-        async function calculateDistance() {
-            const origin = document.getElementById("worker_location").value;
-            const destination = document.getElementById("customer_location").innerText;
-
-            const response = await fetch(`/distance?origin=${origin}&destination=${destination}`);
-            const data = await response.json();
-
-            document.getElementById("distance_result").innerText = data.distance_text;
-            document.getElementById("payout_result").innerText = "$" + data.total_payment;
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <title>Gig Detail – WHOSENXT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>{{ gig.title }}</h1>
-        <p><strong>Location:</strong> <span id="customer_location">{{ gig.location }}</span></p>
+  <header class="site-header">
+    <h1 class="site-title">Gig Detail</h1>
+  </header>
 
-        <label>Your Location:</label><br>
-        <input type="text" id="worker_location" placeholder="123 Worker St, City, State"><br><br>
-        <button onclick="calculateDistance()">Calculate Distance</button><br><br>
+  <main class="container">
+    <article aria-labelledby="gigTitle">
+      <h2 id="gigTitle" class="heading-lg">{{ gig.title }}</h2>
+      <p>
+        <strong>Location:</strong>
+        <span id="customer_location">{{ gig.location }}</span>
+      </p>
+    </article>
 
-        <p><strong>Distance:</strong> <span id="distance_result">-</span></p>
-        <p><strong>Total Payout (Base + Mileage):</strong> <span id="payout_result">-</span></p>
-    </div>
-</body>
-</html>
+    <form id="distance-form" class="form" aria-describedby="formDesc">
+      <p id="formDesc" class="visually-hidden">
+        Enter your address and press Calculate to see distance and payout.
+      </p>
+
+      <label for="worker_location">Your Location</label>
+      <input
+        type="text"
+        id="worker_location"
+        placeholder="123 Worker St, City, State"
+        required
+        aria-required="true"
+      />
+
+      <button type="submit" id="calculate-btn" class="btn">
+        Calculate Distance
+      </button>
+    </form>
+
+    <section
+      id="results"
+      class="results"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    >
+      <p>
+        <strong>Distance:</strong>
+        <span id="distance_result">-</span>
+      </p>
+      <p>
+        <strong>Total Payout (Base + Mileage):</strong>
+        <span id="payout_result">-</span>
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 WHOSENXT. All rights reserved.
+  </footer>
+
+  <script src="/static/script.js"></script>
+  <noscript>
+    <div role="alert" class="no-js-warning">
+      JavaScript
