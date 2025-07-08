@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>WHOSENXT</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <nav>
-      <button id="theme-toggle">Toggle Light/Dark Mode</button>
+<head>
+  <meta charset="utf-8" />
+  <title>WHOSENXT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <button
+        id="theme-toggle"
+        aria-label="Activate dark mode"
+        aria-pressed="false"
+      >
+        🌙
+      </button>
+      <!-- Add more nav links here -->
     </nav>
-    <div id="root"></div>
-    <script src="script.js"></script>
-  </body>
+  </header>
+
+  <main id="root" tabindex="-1">
+    <!-- Your app’s React (or vanilla JS) root goes here -->
+  </main>
+
+  <footer>
+    <p>&copy; 2025 WHOSENXT. All rights reserved.</p>
+  </footer>
+
+  <noscript>
+    <div role="alert">
+      JavaScript is required for full functionality. Please enable JavaScript
+      in your browser.
+    </div>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
 </html>
