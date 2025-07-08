@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wellness Chat – WHOSENXT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Font + core CSS -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="index.css" />
+  <style>
+    /* Chat‐specific overrides */
+    .chat-container {
+      background: var(--secondary);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+      height: 60vh;
+      overflow-y: auto;
+      margin-bottom: var(--space-md);
+    }
+    .chat-message {
+      display: flex;
+      margin-bottom: var(--space-sm);
+    }
+    .chat-message.agent .bubble {
+      background: var(--secondary-light);
+      color: var(--text);
+      margin-right: auto;
+    }
+    .chat-message.user .bubble {
+      background: var(--primary);
+      color: var(--color-white);
+      margin-left: auto;
+    }
+    .bubble {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius);
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    .chat-form {
+      display: flex;
+      gap: var(--space-sm);
+    }
+    .chat-form input[type="text"] {
+      flex: 1;
+      padding: var(--space-sm);
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 1rem;
+    }
+    .chat-form button {
+      padding: var(--space-sm) var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <nav>
+    <div
+      class="container"
+      style="display:flex; align-items:center; justify-content:space-between;"
+    >
+      <a
+        href="index.html"
+        class="logo"
+        style="font-size:1.5rem; font-weight:bold; color:var(--primary); text-decoration:none;"
+      >
+        WHOSENXT
+      </a>
+      <div style="display:flex; gap:var(--space-md); align-items:center;">
+        <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CHAT AREA -->
+  <main
+    class="container"
+    style="display:flex; flex-direction:column; padding:var(--space-lg) 0;"
+  >
+    <header>
+      <h1>Wellness Chat</h1>
+      <p>Connect with our support team in real time.</p>
+    </header>
+
+    <section
+      id="chat-container"
+      class="chat-container"
+      role="log"
+      aria-live="polite"
+      aria-label="Chat conversation"
+    >
+      <!-- Initial agent message -->
+      <div class="chat-message agent">
+        <div class="bubble">
+          Hi there! How can we help you today?
+        </div>
+      </div>
+    </section>
+
+    <form id="chat-form" class="chat-form" aria-label="Send a message">
+      <label for="message-input" class="visually-hidden">Your message</label>
+      <input
+        type="text"
+        id="message-input"
+        placeholder="Type your message…"
+        required
+      />
+      <button type="submit">Send</button>
+    </form>
+  </main>
+
+  <!-- FOOTER -->
+  <footer
+    style="background:var(--background); padding:var(--space-md); text-align:center;"
+  >
+    <p>&copy; 2025 WHOSENXT. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Simple chat stub
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('message-input');
+    const container = document.getElementById('chat-container');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Append user message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = `<div class="bubble">${text}</div>`;
+      container.appendChild(userMsg);
+      container.scrollTop = container.scrollHeight;
+      input.value = '';
+
+      // TODO: send `text` to your backend/chatbot API and append agent response...
+    });
+  </script>
+</body>
+</html>
