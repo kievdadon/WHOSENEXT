@@ -4,34 +4,62 @@
   <meta charset="UTF-8" />
   <title>WHOSENXT Admin Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/static/admin.css" />
+  <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>WHOSENXT Admin Dashboard</h1>
+  <header class="site-header">
+    <h1 class="site-title">WHOSENXT Admin Dashboard</h1>
+    <button id="theme-toggle" 
+            aria-label="Activate dark mode" 
+            aria-pressed="false"
+            class="theme-btn">
+      🌙
+    </button>
+  </header>
 
-    <div class="summary-cards">
-      <div class="card purple">Total Orders: <span id="totalOrders">--</span></div>
-      <div class="card dark">Active Drivers: <span id="activeDrivers">--</span></div>
-      <div class="card purple">Pending Payouts: <span id="pendingPayouts">$--</span></div>
-    </div>
+  <main class="container">
+    <section class="summary" aria-label="Quick stats">
+      <div class="card purple" role="region" aria-labelledby="labelOrders">
+        <div id="labelOrders" class="card-title">Total Orders</div>
+        <div id="totalOrders" class="card-value">--</div>
+      </div>
+      <div class="card dark" role="region" aria-labelledby="labelDrivers">
+        <div id="labelDrivers" class="card-title">Active Drivers</div>
+        <div id="activeDrivers" class="card-value">--</div>
+      </div>
+      <div class="card purple" role="region" aria-labelledby="labelPayouts">
+        <div id="labelPayouts" class="card-title">Pending Payouts</div>
+        <div id="pendingPayouts" class="card-value">$--</div>
+      </div>
+    </section>
 
-    <h2>Recent Orders</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Driver</th>
-          <th>Status</th>
-          <th>Amount</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody id="ordersTable">
-        <!-- Order rows populated by backend -->
-      </tbody>
-    </table>
-  </div>
-</body>
-</html>
+    <section class="orders" aria-labelledby="recentOrders">
+      <h2 id="recentOrders">Recent Orders</h2>
+      <table class="orders-table" aria-describedby="ordersDesc">
+        <caption id="ordersDesc">List of latest orders with status and amounts</caption>
+        <thead>
+          <tr>
+            <th scope="col">Order ID</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Driver</th>
+            <th scope="col">Status</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTable">
+          <!-- Rows inserted via script -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2025 WHOSENXT. All rights reserved.
+  </footer>
+
+  <script src="admin.js"></script>
+  <noscript>
+    <div role="alert" class="no-js-warning">
+      JavaScript is required for full functionality. Please enable JavaScript.
+    </div
