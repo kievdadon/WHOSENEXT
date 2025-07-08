@@ -1,37 +1,33 @@
+/* src/App.css */
+
 /* 1. Theme Variables & Base Settings */
 :root {
-  /* Core Colors */
   --color-primary:    #8e44ad;
   --color-primary-dark: #6c3483;
   --color-white:      #ffffff;
   --color-black:      #000000;
 
-  /* Light Mode */
   --bg-light:         var(--color-white);
   --text-light:       #222222;
   --secondary-light:  #f9f9f9;
 
-  /* Dark Mode */
   --bg-dark:          #181818;
   --text-dark:        #f9f9f9;
   --secondary-dark:   #222222;
 
-  /* Typography */
   --font-sans:        'Roboto', Arial, sans-serif;
   --font-heading:     'Baloo 2', cursive;
-  --base-font-size:   1rem;        /* 16px */
+  --base-font-size:   1rem;
   --line-height:      1.6;
 
-  /* Spacing */
-  --space-xs:         0.25rem;     /* 4px */
-  --space-sm:         0.5rem;      /* 8px */
-  --space-md:         1rem;        /* 16px */
-  --space-lg:         2rem;        /* 32px */
-  --space-xl:         4rem;        /* 64px */
+  --space-xs:         0.25rem;
+  --space-sm:         0.5rem;
+  --space-md:         1rem;
+  --space-lg:         2rem;
+  --space-xl:         4rem;
 
-  /* Layout */
-  --container-max:    60rem;       /* ~960px */
-  --radius:           0.75rem;     /* 12px */
+  --container-max:    60rem;
+  --radius:           0.75rem;
   --shadow-soft:      0 2px 8px rgba(0,0,0,0.07);
 }
 
@@ -42,7 +38,7 @@ body.dark-mode {
   --secondary-light: var(--secondary-dark);
 }
 
-/* 2. Reset & Box Sizing */
+/* Reset & Box Sizing */
 *,
 *::before,
 *::after {
@@ -51,7 +47,7 @@ body.dark-mode {
   padding: 0;
 }
 
-/* 3. Base Typography & Body */
+/* Base Typography & Body */
 html {
   font-size: var(--base-font-size);
 }
@@ -64,26 +60,23 @@ body {
   min-height: 100vh;
 }
 
-/* 4. Utility Classes */
+/* Utility Classes */
 .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
 }
 
-/* 5. Layout Wrapper */
+/* Layout Wrapper */
 .app {
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 
-/* 6. Topbar */
+/* Topbar */
 .topbar {
   position: fixed;
   top: 0;
@@ -101,10 +94,10 @@ body.dark-mode .topbar {
   background-color: var(--secondary-dark);
 }
 
-/* 7. Sidebar */
+/* Sidebar */
 .sidebar {
   width: 220px;
-  padding-top: 60px; /* leave space for topbar */
+  padding-top: 60px;
   background-color: var(--secondary-light);
   box-shadow: var(--shadow-soft);
   overflow-y: auto;
@@ -112,24 +105,8 @@ body.dark-mode .topbar {
 body.dark-mode .sidebar {
   background-color: var(--secondary-dark);
 }
-.sidebar a {
-  display: block;
-  padding: var(--space-md);
-  color: inherit;
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-.sidebar a:hover,
-.sidebar a:focus {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-.sidebar a.active {
-  background-color: var(--color-primary-dark);
-  color: var(--color-white);
-}
 
-/* 8. Main Content Area */
+/* Main Content Area */
 .main {
   flex: 1;
   margin-top: 60px;
@@ -137,16 +114,14 @@ body.dark-mode .sidebar {
   overflow-y: auto;
 }
 
-/* 9. Container Utility */
+/* Container Utility */
 .container {
   max-width: var(--container-max);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--space-md);
-  padding-right: var(--space-md);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
 }
 
-/* 10. Headings */
+/* Headings */
 h1, h2, h3, h4, h5 {
   font-family: var(--font-heading);
   color: var(--color-primary);
@@ -156,7 +131,7 @@ h1 { font-size: 2rem; }
 h2 { font-size: 1.75rem; }
 h3 { font-size: 1.5rem; }
 
-/* 11. Buttons & Links */
+/* Buttons & Links */
 button,
 a.button,
 .button {
@@ -184,7 +159,7 @@ a.button:focus,
   box-shadow: 0 0 0 3px rgba(142,68,173,0.5);
 }
 
-/* 12. Tables */
+/* Tables */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -210,7 +185,7 @@ body.dark-mode th {
   background-color: var(--color-primary-dark);
 }
 
-/* 13. Form Controls */
+/* Form Controls */
 input[type="text"],
 input[type="number"],
 input[type="email"],
@@ -232,7 +207,7 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgba(142,68,173,0.3);
 }
 
-/* 14. Cards */
+/* Cards */
 .card {
   background-color: var(--secondary-light);
   padding: var(--space-md);
@@ -244,7 +219,19 @@ body.dark-mode .card {
   background-color: var(--secondary-dark);
 }
 
-/* 15. Responsive Tweaks */
+/* Text‐logo & Theme Toggle */
+.text-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.theme-toggle-btn {
+  margin-left: auto;
+}
+
+/* Responsive Tweaks */
 @media (max-width: 768px) {
   .sidebar {
     display: none;
