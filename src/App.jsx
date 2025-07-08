@@ -19,6 +19,7 @@ import PostGig from './pages/PostGig';
 import PayoutForm from './pages/PayoutForm';
 import FamilyGroupChat from './pages/FamilyGroupChat';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -52,7 +53,8 @@ function App() {
           <NavLink to="/gig/post" activeClassName="active">Post Gig</NavLink>
           <NavLink to="/payout" activeClassName="active">Payout Form</NavLink>
           <NavLink to="/family/group/1" activeClassName="active">Family Chat</NavLink>
-          <NavLink to="/login" activeClassName="active">Login</NavLink>
+          {!user && <NavLink to="/login" activeClassName="active">Login</NavLink>}
+          {!user && <NavLink to="/signup" activeClassName="active">Sign Up</NavLink>}
         </Sidebar>
 
         <main className="main">
@@ -65,6 +67,7 @@ function App() {
             <Route path="/gig/post" component={PostGig} />
             <Route path="/payout" component={PayoutForm} />
             <Route path="/login" component={LoginPage} />
+            <Route path="/signup" component={SignupPage} />
             <Route
               path="/family/group/:groupId"
               render={(props) =>
