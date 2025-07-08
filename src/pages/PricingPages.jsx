@@ -28,7 +28,7 @@ export default function PricingPage() {
             <li>✅ Sell in marketplace</li>
             <li>✅ Community chat</li>
           </ul>
-          <button onClick={() => handleCheckout('price_gold_id')}>
+          <button onClick={() => handleCheckout(prod_Se2u1RamHRDQl7)}>
             Subscribe to Gold
           </button>
         </div>
@@ -41,7 +41,7 @@ export default function PricingPage() {
             <li>🚀 Priority listing</li>
             <li>📈 Analytics dashboard</li>
           </ul>
-          <button onClick={() => handleCheckout('price_platinum_id')}>
+          <button onClick={() => handleCheckout(prod_Se2vNIDssCgTma)}>
             Subscribe to Platinum
           </button>
         </div>
