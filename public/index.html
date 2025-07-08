@@ -1,43 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>WHOSENXT</title>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHOSENXT – Find Your Next Gig or Hire</title>
+
+  <!-- Google Fonts + your CSS -->
   <link
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="index.css" />
 </head>
+
 <body>
-  <header>
-    <nav aria-label="Main navigation">
-      <button
-        id="theme-toggle"
-        aria-label="Activate dark mode"
-        aria-pressed="false"
-      >
-        🌙
-      </button>
-      <!-- Add more nav links here -->
-    </nav>
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.html" class="logo" style="font-size:1.5rem; font-weight:bold; color:var(--primary); text-decoration:none;">
+        WHOSENXT
+      </a>
+      <div style="display:flex; gap:var(--space-md); align-items:center;">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#features">Features</a>
+        <button id="theme-toggle" aria-label="Toggle theme">Toggle 🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header style="background:var(--secondary); padding:var(--space-lg) 0;">
+    <div class="container" style="text-align:center;">
+      <h1>Find Gigs & Workers Instantly</h1>
+      <p style="max-width:600px; margin:var(--space-md) auto; font-size:1.1rem;">
+        WHOSENXT connects customers needing services with local workers—fast, fair, and transparent.
+      </p>
+      <div style="margin-top:var(--space-md); display:flex; gap:var(--space-md); justify-content:center;">
+        <a href="customer.html" class="button">I'm a Customer</a>
+        <a href="worker.html" class="button">I'm a Worker</a>
+      </div>
+    </div>
   </header>
 
-  <main id="root" tabindex="-1">
-    <!-- Your app’s React (or vanilla JS) root goes here -->
-  </main>
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works" class="container" style="margin-top:var(--space-lg);">
+    <h2>How It Works</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--space-lg); margin-top:var(--space-md);">
+      <div>
+        <h3>1. Post a Gig</h3>
+        <p>Describe your task and location in seconds. No signup needed.</p>
+      </div>
+      <div>
+        <h3>2. Review Offers</h3>
+        <p>Workers submit bids showing your estimated payout, including mileage.</p>
+      </div>
+      <div>
+        <h3>3. Complete & Rate</h3>
+        <p>Approve the worker, finish the job, and both sides leave a rating.</p>
+      </div>
+    </div>
+  </section>
 
-  <footer>
+  <!-- FEATURES -->
+  <section id="features" style="background:var(--secondary); padding:var(--space-lg) 0; margin-top:var(--space-lg);">
+    <div class="container">
+      <h2>Features</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--space-lg); margin-top:var(--space-md);">
+        <div class="card">
+          <h3>Real-Time Payout</h3>
+          <p>Get your total pay—including mileage—before you accept any gig.</p>
+        </div>
+        <div class="card">
+          <h3>Secure Messaging</h3>
+          <p>Chat safely without sharing personal contact info.</p>
+        </div>
+        <div class="card">
+          <h3>Intuitive Dashboard</h3>
+          <p>Track your gigs, ongoing orders, and earnings in one place.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:var(--background); padding:var(--space-md); text-align:center; margin-top:var(--space-lg);">
     <p>&copy; 2025 WHOSENXT. All rights reserved.</p>
   </footer>
-
-  <noscript>
-    <div role="alert">
-      JavaScript is required for full functionality. Please enable JavaScript
-      in your browser.
-    </div>
-  </noscript>
 
   <script src="script.js"></script>
 </body>
