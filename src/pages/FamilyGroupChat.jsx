@@ -1,44 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { db } from '../firebase';
+import './FamilyGroupChat.css';
 
-function FamilyGroupChat({ groupId }) {
+export default function FamilyGroupChat() {
+  const { groupId } = useParams();
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [text, setText] = useState('');
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    fetch(`https://your-backend-url/api/family/group/${groupId}`)
-      .then((res) => res.json())
-      .then((data) => setMessages(data));
+    const q = query(
+      collection(db, `groups/${groupId}/messages`),
+      orderBy('createdAt')
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMessages(msgs);
+    });
+    return () => unsubscribe();
   }, [groupId]);
 
-  const handleSend = () => {
-    const messageData = { sender: "User", message: newMessage };
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-    fetch(`https://your-backend-url/api/family/group/${groupId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(messageData),
-    })
-      .then(() => setMessages([...messages, { sender: "User", message: newMessage }]))
-      .catch((err) => console.error("Send failed:", err));
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+
+    await addDoc(collection(db, `groups/${groupId}/messages`), {
+      text,
+      sender: 'You',
+      createdAt: serverTimestamp(),
+    });
+    setText('');
   };
 
   return (
-    <div>
-      <h2>Family Group Chat</h2>
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <strong>{msg.sender}:</strong> {msg.message}
+    <div className="chat-container">
+      <h1>👨‍👩‍👧‍👦 Family Group Chat</h1>
+      <div className="chat-box">
+        {messages.map((msg) => (
+          <div key={msg.id} className="chat-message">
+            <strong>{msg.sender}:</strong> {msg.text}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
-      <textarea
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-      />
-      <button onClick={handleSend}>Send</button>
+      <form onSubmit={sendMessage} className="chat-form">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Type a message..."
+        />
+        <button type="submit">Send</button>
+      </form>
     </div>
   );
 }
-
-export default FamilyGroupChat;
