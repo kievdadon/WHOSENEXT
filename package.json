@@ -1,6 +1,7 @@
 {
-  "name": "WHOSENXT-Frontend",
+  "name": "whosenxt-backend",
   "version": "1.0.0",
+  "description": "Backend server for WHOSENXT Stripe integration",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,42 +10,9 @@
     "node": ">=18 <21"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "stripe": "^12.0.0",
-    "dotenv": "^16.0.3",
-    "cors": "^2.8.5"
-  }
-}
-
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "devDependencies": {},
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "stripe": "^12.0.0"
   }
 }
