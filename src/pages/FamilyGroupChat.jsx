@@ -11,7 +11,7 @@ import {
 import { db } from '../firebase';
 import './FamilyGroupChat.css';
 
-export default function FamilyGroupChat() {
+export default function FamilyGroupChat({ user }) {
   const { groupId } = useParams();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
@@ -42,7 +42,7 @@ export default function FamilyGroupChat() {
 
     await addDoc(collection(db, `groups/${groupId}/messages`), {
       text,
-      sender: 'You',
+      sender: user?.email || 'Anonymous',
       createdAt: serverTimestamp(),
     });
     setText('');
