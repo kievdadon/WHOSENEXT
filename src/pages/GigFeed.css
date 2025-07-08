@@ -1,0 +1,86 @@
+.gig-feed {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+.gig-feed h1 {
+  text-align: center;
+  color: #6a1b9a;
+  margin-bottom: 2rem;
+}
+
+.gig-filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.gig-filters select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.gig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.gig-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.gig-card:hover {
+  transform: translateY(-4px);
+}
+
+.gig-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.gig-header h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.badge {
+  background: #ff5252;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.gig-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.status {
+  font-weight: bold;
+}
+
+.status.accepted {
+  color: green;
+}
+
+.status.open {
+  color: #6a1b9a;
+}
