@@ -1,62 +1,102 @@
-/* Theme variables for light and dark mode */
+/* Theme variables */
 :root {
-  --primary: #8e44ad; /* Purple */
-  --background: #fff;
-  --text: #222;
-  --secondary: #f9f9f9;
-}
+  /* Primary Palette */
+  --color-primary: #8e44ad;
+  --color-primary-dark: #6c3483;
+  --color-black: #000;
+  --color-white: #fff;
 
-body.dark-mode {
-  --background: #181818;
-  --text: #f9f9f9;
-  --secondary: #222;
+  /* Light Mode */
+  --bg-light: var(--color-white);
+  --text-light: #222;
+  --secondary-light: #f9f9f9;
+
+  /* Dark Mode */
+  --bg-dark: #181818;
+  --text-dark: var(--color-white);
+  --secondary-dark: #222;
+
+  /* Typography */
+  --font-base: 1rem; /* equals 16px */
+  --line-height-base: 1.6;
+
+  /* Spacing */
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
 }
 
 body {
-  font-family: 'Arial', 'Verdana', 'Open Sans', sans-serif;
-  font-size: 20px;
-  background: var(--background);
-  color: var(--text);
-  line-height: 1.7;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: var(--font-base);
+  line-height: var(--line-height-base);
   margin: 0;
   padding: 0;
-  transition: background 0.3s, color 0.3s;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  transition: background-color 0.3s, color 0.3s;
 }
 
+/* Dark mode toggle */
+body.dark-mode {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+/* Responsive Container */
+.container {
+  max-width: 960px;
+  margin: var(--space-lg) auto;
+  padding: var(--space-lg);
+  background-color: var(--secondary-light);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .container {
+  background-color: var(--secondary-dark);
+}
+
+/* Headings */
 h1, h2, h3 {
-  font-weight: bold;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  color: var(--primary);
+  color: var(--color-primary);
+  margin: var(--space-lg) 0 var(--space-md) 0;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
+/* Links & Buttons */
 a, button {
-  font-size: 1.1em;
-  padding: 0.7em 1.2em;
-  border-radius: 8px;
-  background: var(--primary);
-  color: #fff;
+  display: inline-block;
+  font-size: 1.1rem;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 0.5rem;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 a:hover, button:hover {
-  background: #6c3483;
+  background-color: var(--color-primary-dark);
 }
 
-nav {
-  background: var(--secondary);
-  padding: 1em;
-  border-bottom: 2px solid #eee;
+/* Focus states */
+a:focus, button:focus {
+  outline: 3px solid var(--color-primary-dark);
+  outline-offset: 2px;
 }
 
-.container {
-  max-width: 900px;
-  margin: 2em auto;
-  padding: 2em;
-  background: var(--secondary);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    margin: var(--space-md);
+    padding: var(--space-md);
+  }
+
+  body {
+    font-size: 0.9375rem; /* 15px */
+  }
 }
