@@ -1,31 +1,68 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { getMenu } from '../api'; // Replace with your actual API call
+import './MarketplaceFeed.css';
 
-function MarketplaceFeed() {
-  const [posts, setPosts] = useState([]);
+export default function MarketplaceFeed() {
+  const [items, setItems] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('All');
 
   useEffect(() => {
-    fetch("https://your-backend-url/api/marketplace/feed")
-      .then((res) => res.json())
-      .then((data) => setPosts(data))
-      .catch((err) => console.error("Error fetching posts:", err));
+    async function fetchItems() {
+      const data = await getMenu('all'); // Replace with real store or API
+      setItems(data.menu || []);
+      setFiltered(data.menu || []);
+    }
+    fetchItems();
   }, []);
 
+  useEffect(() => {
+    let result = items;
+    if (search) {
+      result = result.filter(item =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (category !== 'All') {
+      result = result.filter(item => item.category === category);
+    }
+    setFiltered(result);
+  }, [search, category, items]);
+
+  const categories = ['All', ...new Set(items.map(i => i.category).filter(Boolean))];
+
   return (
-    <div>
-      <h2>Marketplace Feed</h2>
-      <div>
-        {posts.map((post) => (
-          <div key={post.id} style={{ padding: 10, margin: 10, border: "1px solid #ccc" }}>
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-            <p><strong>Price:</strong> ${post.price}</p>
-            <p><strong>Location:</strong> {post.location}</p>
-            <button>Contact Seller</button>
+    <div className="marketplace">
+      <h1>🛍️ Marketplace</h1>
+
+      <div className="marketplace-filters">
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          {categories.map((cat, i) => (
+            <option key={i} value={cat}>{cat}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="marketplace-grid">
+        {filtered.map((item, i) => (
+          <div key={i} className="marketplace-card">
+            {item.imageUrl && (
+              <img src={item.imageUrl} alt={item.name} />
+            )}
+            <h3>{item.name}</h3>
+            <p className="price">💵 ${item.price?.toFixed(2)}</p>
+            <p className="category">📦 {item.category}</p>
           </div>
         ))}
+        {filtered.length === 0 && <p>No items found.</p>}
       </div>
     </div>
   );
 }
-
-export default MarketplaceFeed;
