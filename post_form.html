@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Post a Gig – WHOSENXT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Font + theme CSS -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <nav>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.html" class="logo" style="font-size:1.5rem; font-weight:bold; color:var(--primary); text-decoration:none;">
+        WHOSENXT
+      </a>
+      <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+    </div>
+  </nav>
+
+  <main class="container" style="padding:var(--space-lg) 0;">
+    <header>
+      <h1>Post a New Gig</h1>
+      <p>Fill out the form below so local workers can see your request.</p>
+    </header>
+
+    <form id="post-gig-form" style="margin-top:var(--space-lg); display:grid; gap:var(--space-md);">
+      <label for="gig-title">Gig Title<span aria-hidden="true" style="color:#e74c3c;"> *</span></label>
+      <input
+        type="text"
+        id="gig-title"
+        name="title"
+        placeholder="e.g. Help moving furniture"
+        required
+        style="padding:var(--space-sm); border:1px solid #ccc; border-radius:var(--radius);"
+      />
+
+      <label for="gig-desc">Description<span aria-hidden="true" style="color:#e74c3c;"> *</span></label>
+      <textarea
+        id="gig-desc"
+        name="description"
+        rows="4"
+        placeholder="Provide details about the task..."
+        required
+        style="padding:var(--space-sm); border:1px solid #ccc; border-radius:var(--radius); resize:vertical;"
+      ></textarea>
+
+      <label for="gig-location">Location<span aria-hidden="true" style="color:#e74c3c;"> *</span></label>
+      <input
+        type="text"
+        id="gig-location"
+        name="location"
+        placeholder="123 Main St, City, State"
+        required
+        style="padding:var(--space-sm); border:1px solid #ccc; border-radius:var(--radius);"
+      />
+
+      <label for="gig-category">Category</label>
+      <select
+        id="gig-category"
+        name="category"
+        style="padding:var(--space-sm); border:1px solid #ccc; border-radius:var(--radius);"
+      >
+        <option value="">Select a category</option>
+        <option value="delivery">Delivery</option>
+        <option value="moving">Moving</option>
+        <option value="handyman">Handyman</option>
+        <option value="cleaning">Cleaning</option>
+      </select>
+
+      <label for="gig-price">Offered Price (USD)</label>
+      <input
+        type="number"
+        id="gig-price"
+        name="price"
+        min="0"
+        step="0.01"
+        placeholder="e.g. 50.00"
+        style="padding:var(--space-sm); border:1px solid #ccc; border-radius:var(--radius);"
+      />
+
+      <div style="margin-top:var(--space-lg); display:flex; gap:var(--space-md);">
+        <button type="submit">Submit Gig</button>
+        <button type="reset" style="background:#ccc; color:#333;">Clear</button>
+      </div>
+    </form>
+  </main>
+
+  <footer style="background:var(--secondary); padding:var(--space-md); text-align:center;">
+    <p>&copy; 2025 WHOSENXT. All rights reserved.</p>
+  </footer>
+
+  <noscript>
+    <div role="alert" style="background:#ffeeba; color:#856404; padding:var(--space-md); text-align:center;">
+      JavaScript is required to submit this form. Please enable JavaScript.
+    </div>
+  </noscript>
+
+  <script src="script.js"></script>
+</body>
+</html>
