@@ -1,4 +1,3 @@
-// src/pages/LandingPage.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
@@ -35,6 +34,37 @@ export default function LandingPage() {
             <h3>Track Payouts</h3>
             <p>Manage your earnings and submit payout requests easily.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="testimonials">
+        <h2>What People Are Saying</h2>
+        <div className="testimonial-grid">
+          <blockquote>
+            <p>"WHOSENXT helped me find work the same day I signed up."</p>
+            <footer>— Jordan, Cleveland</footer>
+          </blockquote>
+          <blockquote>
+            <p>"I posted a gig and had it completed within hours. Super smooth."</p>
+            <footer>— Maya, Columbus</footer>
+          </blockquote>
+          <blockquote>
+            <p>"The marketplace is a game-changer for local sellers."</p>
+            <footer>— Devon, Cincinnati</footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <section className="video-section">
+        <h2>See WHOSENXT in Action</h2>
+        <div className="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            title="WHOSENXT Demo"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </section>
 
