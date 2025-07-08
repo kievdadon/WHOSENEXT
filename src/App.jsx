@@ -1,10 +1,10 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  NavLink
+  NavLink,
+  Redirect,
 } from 'react-router-dom';
 
 import Topbar from './components/Topbar';
@@ -18,17 +18,29 @@ import GigFeed from './pages/GigFeed';
 import PostGig from './pages/PostGig';
 import PayoutForm from './pages/PayoutForm';
 import FamilyGroupChat from './pages/FamilyGroupChat';
+import LoginPage from './pages/LoginPage';
+
+import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [dark, setDark] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     document.body.classList.toggle('dark-mode', dark);
   }, [dark]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Router>
-      <Topbar dark={dark} toggleDark={() => setDark(d => !d)} />
+      <Topbar dark={dark} toggleDark={() => setDark((d) => !d)} />
 
       <div className="app">
         <Sidebar>
@@ -40,6 +52,7 @@ function App() {
           <NavLink to="/gig/post" activeClassName="active">Post Gig</NavLink>
           <NavLink to="/payout" activeClassName="active">Payout Form</NavLink>
           <NavLink to="/family/group/1" activeClassName="active">Family Chat</NavLink>
+          <NavLink to="/login" activeClassName="active">Login</NavLink>
         </Sidebar>
 
         <main className="main">
@@ -51,7 +64,17 @@ function App() {
             <Route path="/gig/feed" component={GigFeed} />
             <Route path="/gig/post" component={PostGig} />
             <Route path="/payout" component={PayoutForm} />
-            <Route path="/family/group/:groupId" component={FamilyGroupChat} />
+            <Route path="/login" component={LoginPage} />
+            <Route
+              path="/family/group/:groupId"
+              render={(props) =>
+                user ? (
+                  <FamilyGroupChat {...props} user={user} />
+                ) : (
+                  <Redirect to="/login" />
+                )
+              }
+            />
           </Switch>
         </main>
       </div>
