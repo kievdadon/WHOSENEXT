@@ -1,0 +1,62 @@
+/* Theme variables for light and dark mode */
+:root {
+  --primary: #8e44ad; /* Purple */
+  --background: #fff;
+  --text: #222;
+  --secondary: #f9f9f9;
+}
+
+body.dark-mode {
+  --background: #181818;
+  --text: #f9f9f9;
+  --secondary: #222;
+}
+
+body {
+  font-family: 'Arial', 'Verdana', 'Open Sans', sans-serif;
+  font-size: 20px;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--primary);
+}
+
+a, button {
+  font-size: 1.1em;
+  padding: 0.7em 1.2em;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+a:hover, button:hover {
+  background: #6c3483;
+}
+
+nav {
+  background: var(--secondary);
+  padding: 1em;
+  border-bottom: 2px solid #eee;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 2em;
+  background: var(--secondary);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
