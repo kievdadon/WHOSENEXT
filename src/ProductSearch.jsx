@@ -1,3 +1,4 @@
+// ProductSearch.jsx
 import React, { useState } from "react";
 import { getMenu } from "./api";
 
@@ -8,92 +9,164 @@ export default function ProductSearch() {
 
   const fetchMenu = async () => {
     setError("");
-    const data = await getMenu(store);
-    if (data.error) setError("Store not found.");
-    else setMenu(data.menu || []);
+    try {
+      const data = await getMenu(store);
+      if (data.error) {
+        setMenu([]);
+        setError("Store not found.");
+      } else {
+        setMenu(data.menu || []);
+      }
+    } catch {
+      setMenu([]);
+      setError("Error fetching menu.");
+    }
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>🛍️ Search Store Menu</h2>
+    <main style={styles.container}>
+      <header>
+        <h1 style={styles.title}>🛍️ Search Store Menu</h1>
+      </header>
 
-      <input
-        placeholder="Enter store name..."
-        value={store}
-        onChange={(e) => setStore(e.target.value)}
-        style={styles.input}
-      />
-      <button onClick={fetchMenu} style={styles.button}>
-        View Menu
-      </button>
+      <section aria-labelledby="search-heading" style={styles.section}>
+        <h2 id="search-heading" className="visually-hidden">
+          Search for a store’s menu
+        </h2>
 
-      {error && <p style={styles.error}>{error}</p>}
+        {/* Search Form */}
+        <div style={styles.form}>
+          <label htmlFor="store-input" className="visually-hidden">
+            Store name
+          </label>
+          <input
+            id="store-input"
+            type="text"
+            placeholder="Enter store name…"
+            value={store}
+            onChange={(e) => setStore(e.target.value)}
+            style={styles.input}
+          />
+          <button
+            type="button"
+            onClick={fetchMenu}
+            style={styles.button}
+            aria-label="View menu for entered store"
+          >
+            View Menu
+          </button>
+        </div>
 
-      <div style={styles.menu}>
-        {menu.map((item, index) => (
-          <div key={index} style={styles.card}>
-            <h4>{item.name}</h4>
-            <p>💵 ${item.price?.toFixed(2)}</p>
-            <p>📦 {item.category}</p>
-            {item.imageUrl && (
-              <img src={item.imageUrl} alt="item" style={styles.img} />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+        {error && (
+          <p role="alert" style={styles.error}>
+            {error}
+          </p>
+        )}
+
+        {/* Menu Grid */}
+        {menu.length > 0 && (
+          <section aria-label="Search results" style={styles.menu}>
+            {menu.map((item, i) => (
+              <article key={i} style={styles.card}>
+                {item.imageUrl && (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    loading="lazy"
+                    style={styles.img}
+                  />
+                )}
+                <h2 style={styles.itemName}>{item.name}</h2>
+                <p style={styles.itemInfo}>
+                  <span aria-label="Price">💵</span>{" "}
+                  {item.price?.toLocaleString(undefined, {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </p>
+                <p style={styles.itemInfo}>
+                  <span aria-label="Category">📦</span> {item.category}
+                </p>
+              </article>
+            ))}
+          </section>
+        )}
+      </section>
+    </main>
   );
 }
 
 const styles = {
   container: {
-    maxWidth: 600,
-    margin: "auto",
-    padding: 20,
+    padding: "var(--space-lg)",
+    maxWidth: "var(--container-max)",
+    margin: "0 auto",
   },
   title: {
     textAlign: "center",
-    color: "#6A1B9A",
-    marginBottom: 20,
+    color: "var(--primary)",
+    marginBottom: "var(--space-lg)",
+    fontSize: "1.75rem",
+  },
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "var(--space-lg)",
+  },
+  form: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "var(--space-sm)",
+    marginBottom: "var(--space-md)",
   },
   input: {
-    padding: 10,
-    width: "100%",
-    borderRadius: 8,
+    flex: "1 1 200px",
+    padding: "var(--space-sm)",
+    borderRadius: "var(--radius)",
     border: "1px solid #ccc",
-    marginBottom: 10,
+    fontSize: "1rem",
   },
   button: {
-    padding: 12,
-    background: "#8E24AA",
-    color: "#fff",
+    padding: "var(--space-sm) var(--space-md)",
+    backgroundColor: "var(--primary)",
+    color: "var(--color-white)",
     border: "none",
-    borderRadius: 8,
-    width: "100%",
-    marginBottom: 20,
+    borderRadius: "var(--radius)",
+    cursor: "pointer",
+    fontSize: "1rem",
   },
   error: {
-    color: "red",
+    color: "var(--color-primary-dark)",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: "var(--space-md)",
   },
   menu: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-    gap: 20,
+    gap: "var(--space-md)",
   },
   card: {
-    background: "#fff",
-    borderRadius: 12,
-    padding: 12,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    backgroundColor: "var(--secondary-light)",
+    padding: "var(--space-md)",
+    borderRadius: "var(--radius)",
+    boxShadow: "var(--shadow-soft)",
     textAlign: "center",
+    transition: "background-color 0.3s",
   },
   img: {
     width: "100%",
-    maxHeight: 120,
+    height: "120px",
     objectFit: "cover",
-    borderRadius: 8,
-    marginTop: 10,
+    borderRadius: "var(--radius)",
+    marginBottom: "var(--space-sm)",
+  },
+  itemName: {
+    fontSize: "1.1rem",
+    marginBottom: "var(--space-sm)",
+    color: "var(--text-light)",
+  },
+  itemInfo: {
+    marginBottom: "var(--space-sm)",
+    color: "var(--text-light)",
   },
 };
