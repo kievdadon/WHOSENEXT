@@ -1,139 +1,103 @@
-import React, { useState } from "react";
+// AuthForm.jsx
+import React, { useState } from 'react';
+import './AuthForm.css'; // make sure to create this and/or merge into App.css
 
 export default function AuthForm({ onLoginSuccess }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
     const mockUser = {
-      name: "Test User",
+      name: 'Test User',
       email,
-      is_admin: email.includes("admin"),
-      is_worker: email.includes("worker"),
+      is_admin: email.includes('admin'),
+      is_worker: email.includes('worker'),
     };
     onLoginSuccess(mockUser);
   };
 
+  // Floating-emoji positions
+  const emojis = [
+    { symbol: '💵', style: { top: '15%', left: '10%' } },
+    { symbol: '👕', style: { top: '40%', left: '75%' } },
+    { symbol: '🚗', style: { top: '60%', left: '20%' } },
+    { symbol: '🛋️', style: { top: '80%', left: '65%' } },
+  ];
+
   return (
-    <div style={styles.background}>
-      {/* Floating Emojis */}
-      <div style={{ ...styles.floatingEmoji, top: "15%", left: "10%" }}>💵</div>
-      <div style={{ ...styles.floatingEmoji, top: "40%", left: "75%" }}>👕</div>
-      <div style={{ ...styles.floatingEmoji, top: "60%", left: "20%" }}>🚗</div>
-      <div style={{ ...styles.floatingEmoji, top: "80%", left: "65%" }}>🛋️</div>
+    <main className="auth-page">
+      <div className="auth-background">
+        {emojis.map((e, i) => (
+          <div
+            key={i}
+            className="floating-emoji"
+            style={e.style}
+            aria-hidden="true"
+          >
+            {e.symbol}
+          </div>
+        ))}
 
-      {/* Login Form */}
-      <form onSubmit={handleLogin} style={styles.form}>
-        <h2 style={styles.title}>WHOSENXT Login</h2>
+        <form
+          onSubmit={handleLogin}
+          className="auth-form"
+          noValidate
+          aria-labelledby="auth-title"
+        >
+          <header>
+            <h2 id="auth-title" className="auth-title">
+              WHOSENXT Login
+            </h2>
+          </header>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-          required
-        />
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="you@example.com"
+            />
+          </div>
 
-        <button type="submit" style={styles.loginButton}>Login</button>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
 
-        <div style={styles.divider}>or</div>
+          <button type="submit" className="btn primary-btn">
+            Login
+          </button>
 
-        <button type="button" style={styles.socialButton}>Continue with Google</button>
-        <button type="button" style={styles.socialButton}>Continue with iCloud</button>
+          <div className="divider" aria-hidden="true">
+            or
+          </div>
 
-        <p style={styles.signupText}>
-          New to WHOSENXT? <a href="#" style={styles.link}>Sign up here</a>
-        </p>
-      </form>
-    </div>
+          <button type="button" className="btn social-btn">
+            Continue with Google
+          </button>
+          <button type="button" className="btn social-btn">
+            Continue with iCloud
+          </button>
+
+          <p className="signup-text">
+            New to WHOSENXT?{' '}
+            <a href="#" className="signup-link">
+              Sign up here
+            </a>
+          </p>
+        </form>
+      </div>
+    </main>
   );
 }
-
-const styles = {
-  background: {
-    position: "relative",
-    background: "linear-gradient(to bottom right, #F3E5F5, #E1BEE7)",
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  floatingEmoji: {
-    position: "absolute",
-    fontSize: 44,
-    opacity: 0.08,
-    animation: "float 8s ease-in-out infinite",
-  },
-  form: {
-    background: "#fff",
-    padding: 30,
-    borderRadius: 16,
-    maxWidth: 350,
-    width: "90%",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
-    zIndex: 1,
-  },
-  title: {
-    marginBottom: 20,
-    fontSize: 26,
-    color: "#6A1B9A",
-    textAlign: "center",
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    marginBottom: 12,
-    borderRadius: 10,
-    border: "1px solid #ccc",
-    fontSize: 14,
-  },
-  loginButton: {
-    width: "100%",
-    padding: 12,
-    background: "#8E24AA",
-    color: "#fff",
-    fontWeight: "bold",
-    border: "none",
-    borderRadius: 10,
-    cursor: "pointer",
-    fontSize: 15,
-  },
-  divider: {
-    textAlign: "center",
-    margin: "16px 0",
-    color: "#999",
-  },
-  socialButton: {
-    width: "100%",
-    padding: 12,
-    background: "#EDE7F6",
-    color: "#4A148C",
-    fontWeight: "bold",
-    border: "none",
-    borderRadius: 10,
-    marginBottom: 10,
-    cursor: "pointer",
-  },
-  signupText: {
-    textAlign: "center",
-    marginTop: 14,
-    fontSize: 14,
-    color: "#555",
-  },
-  link: {
-    color: "#6A1B9A",
-    fontWeight: "bold",
-    textDecoration: "none",
-  },
-};
