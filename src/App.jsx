@@ -7,6 +7,7 @@ import {
   NavLink 
 } from "react-router-dom";
 
+import LandingPage from './pages/LandingPage';
 import Topbar from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import LandingPage from "./pages/LandingPage";
