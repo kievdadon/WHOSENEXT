@@ -4,17 +4,19 @@ import './PricingPage.css';
 export default function PricingPage() {
   const handleCheckout = async (priceId) => {
     try {
-      const res = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId }),
-      });
-      const data = await res.json();
-      window.location.href = data.url;
-    } catch (err) {
-      alert('Checkout failed. Please try again.');
-    }
-  };
+      const handleCheckout = async (priceId) => {
+  try {
+    const res = await fetch(https://whosenext2.onrender.com, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priceId }),
+    });
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch (err) {
+    alert('Checkout failed. Please try again.');
+  }
+};
 
   return (
     <div className="pricing-page">
