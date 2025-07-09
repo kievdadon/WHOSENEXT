@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
@@ -20,6 +21,10 @@ import PayoutForm from './pages/PayoutForm';
 import FamilyGroupChat from './pages/FamilyGroupChat';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+
+// new imports for Stripe redirects
+import SuccessPage from './pages/SuccessPage';
+import CancelPage from './pages/CancelPage';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -45,16 +50,40 @@ function App() {
 
       <div className="app">
         <Sidebar>
-          <NavLink exact to="/" activeClassName="active">Home</NavLink>
-          <NavLink to="/upload-store" activeClassName="active">Upload Store</NavLink>
-          <NavLink to="/marketplace/feed" activeClassName="active">Marketplace</NavLink>
-          <NavLink to="/marketplace/post" activeClassName="active">Post Item</NavLink>
-          <NavLink to="/gig/feed" activeClassName="active">Gig Feed</NavLink>
-          <NavLink to="/gig/post" activeClassName="active">Post Gig</NavLink>
-          <NavLink to="/payout" activeClassName="active">Payout Form</NavLink>
-          <NavLink to="/family/group/1" activeClassName="active">Family Chat</NavLink>
-          {!user && <NavLink to="/login" activeClassName="active">Login</NavLink>}
-          {!user && <NavLink to="/signup" activeClassName="active">Sign Up</NavLink>}
+          <NavLink exact to="/" activeClassName="active">
+            Home
+          </NavLink>
+          <NavLink to="/upload-store" activeClassName="active">
+            Upload Store
+          </NavLink>
+          <NavLink to="/marketplace/feed" activeClassName="active">
+            Marketplace
+          </NavLink>
+          <NavLink to="/marketplace/post" activeClassName="active">
+            Post Item
+          </NavLink>
+          <NavLink to="/gig/feed" activeClassName="active">
+            Gig Feed
+          </NavLink>
+          <NavLink to="/gig/post" activeClassName="active">
+            Post Gig
+          </NavLink>
+          <NavLink to="/payout" activeClassName="active">
+            Payout Form
+          </NavLink>
+          <NavLink to="/family/group/1" activeClassName="active">
+            Family Chat
+          </NavLink>
+          {!user && (
+            <NavLink to="/login" activeClassName="active">
+              Login
+            </NavLink>
+          )}
+          {!user && (
+            <NavLink to="/signup" activeClassName="active">
+              Sign Up
+            </NavLink>
+          )}
         </Sidebar>
 
         <main className="main">
@@ -68,6 +97,11 @@ function App() {
             <Route path="/payout" component={PayoutForm} />
             <Route path="/login" component={LoginPage} />
             <Route path="/signup" component={SignupPage} />
+
+            {/* Stripe Checkout Redirects */}
+            <Route path="/success" component={SuccessPage} />
+            <Route path="/cancel" component={CancelPage} />
+
             <Route
               path="/family/group/:groupId"
               render={(props) =>
