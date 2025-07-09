@@ -1,10 +1,13 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
-const app = express();
+const cors = require('cors');
 const checkoutRoutes = require('./routes/checkout');
 
+const app = express();
+app.use(cors());
 app.use(express.json());
-app.use(checkoutRoutes);
+app.use('/api', checkoutRoutes);
 
-const cors = require('cors');
-app.use(cors({ origin: 'http://localhost:3000' })); // or your frontend URL
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
