@@ -9,7 +9,7 @@ export default function PricingPage() {
     const res = await fetch(https://whosenext2.onrender.com, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ priceId }),
+      body: JSON.stringify({ prod_Se2vNIDssCgTma }),
     });
     const data = await res.json();
     window.location.href = data.url;
