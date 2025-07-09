@@ -16,12 +16,4 @@
     "stripe": "^12.0.0"
   }
 }
-{
-  "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "start": "npx serve -s frontend/build"
-  },
-  "dependencies": {
-    "serve": "^14.0.1"
-  }
-}
+
